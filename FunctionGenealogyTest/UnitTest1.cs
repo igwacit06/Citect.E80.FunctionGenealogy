@@ -13,11 +13,7 @@ namespace Citect.E80.FunctionGenealogyTest
         [TestMethod]
         public void FunctionDictionaryTest_ShouldNotBeNull()
         {
-
-            var path = Path.GetDirectoryName(@"C:\ProgramData\Schneider Electric\Citect SCADA 2018\User");
-
-            var functions = FunctionGenealogy.FunctionDictionary.GetFunctions(path);
-
+            var functions = FunctionGenealogy.FunctionDictionary.GetFunctions(@"C:\ProgramData\Schneider Electric\Citect SCADA 2018\User");
             Assert.IsNotNull(functions, "cannot be null");
 
             foreach (var data in functions)
@@ -28,6 +24,18 @@ namespace Citect.E80.FunctionGenealogyTest
                     TestContext.WriteLine("file:{0},line:{1},funcName:{2}", data.FileName, kvp.Key, kvp.Value);
                 }
             }
+
+            FunctionGenealogy.FunctionDictionary.FunctionRefExistInCicode();
+
+            Assert.IsNotNull(FunctionGenealogy.FunctionDictionary.cicodefunctions);
+            //list of function received
+            //get functions that are referenced
+            //FunctionGenealogy.FunctionDictionary.GetProjectDBF(@"C:\ProgramData\Schneider Electric\Citect SCADA 2018\User", "QRTP");
+
+            Assert.IsNotNull(FunctionGenealogy.FunctionDictionary.cicodefunctions);
+
+            //FunctionGenealogy.FunctionDictionary.PrintFunctionReferences();
+        
         }
     }
 }
