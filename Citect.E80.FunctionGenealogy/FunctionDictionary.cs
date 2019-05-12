@@ -95,11 +95,14 @@ namespace Citect.E80.FunctionGenealogy
             return cicodefunctions;
         }
 
+        /// <summary>
+        /// find the functions that exist in Cicode
+        /// </summary>
         public static void FunctionRefExistInCicode()
         {
             var cicodefilelist = cicodefunctions.Select(a => new { a.FileName }).ToList();
 
-
+            
             foreach (var funcLoc in cicodefunctions)
             {
                 //search against all list cicode file contents for function ref.
@@ -154,8 +157,25 @@ namespace Citect.E80.FunctionGenealogy
                             }
                         }
                     }
+                    
                 }
             }
+
+            LogCsv = new LogCsv(@"C:\QR_PSCS\Logs\FuncRefInCicode.csv", true);
+            foreach (var funcLoc in cicodefunctions)
+            {
+                //search against all list cicode file contents for function ref.
+                var ciFile = funcLoc.FileName.Substring(funcLoc.FileName.LastIndexOf('\\'), funcLoc.FileName.IndexOf('.') -funcLoc.FileName.LastIndexOf('\\')).TrimStart(new char[] { '\\', '*', '?' });
+
+                foreach (var kvp in funcLoc.FunctionLocations)
+                {
+                    //get value of kvp.value from dictionary
+                    var metaDetails = funcLoc.FunctionCicodeReferences[kvp.Value];
+                    metaDetails.ForEach(s => LogCsv.WriteToFile("{0},{1},{2},{3}", ciFile,kvp.Value, s.Name, s.ReferenceCount));
+                }
+            }
+
+            LogCsv.CloseFile();
             //foreach function check existance in all cicode files?
 
             //get filepath into list
@@ -165,7 +185,7 @@ namespace Citect.E80.FunctionGenealogy
         }
 
         /// <summary>
-        /// 
+        /// setup the project dbfs.
         /// </summary>
         /// <param name="root"></param>
         /// <returns></returns>

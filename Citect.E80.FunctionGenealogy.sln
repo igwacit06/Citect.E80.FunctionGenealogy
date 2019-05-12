@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.E80.FunctionGenealog
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionGenealogyTest", "FunctionGenealogyTest\FunctionGenealogyTest.csproj", "{2CDDF6F7-A72C-438C-BE4B-F69EDBB9605E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionGenealogyConsole", "FunctionGenealogyConsole\FunctionGenealogyConsole.csproj", "{FD53CF64-7DA9-4BDF-A81D-0F6927880624}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2CDDF6F7-A72C-438C-BE4B-F69EDBB9605E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CDDF6F7-A72C-438C-BE4B-F69EDBB9605E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CDDF6F7-A72C-438C-BE4B-F69EDBB9605E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD53CF64-7DA9-4BDF-A81D-0F6927880624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD53CF64-7DA9-4BDF-A81D-0F6927880624}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD53CF64-7DA9-4BDF-A81D-0F6927880624}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD53CF64-7DA9-4BDF-A81D-0F6927880624}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
