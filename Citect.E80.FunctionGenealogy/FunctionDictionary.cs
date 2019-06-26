@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using DbfDataReader;
 using System.Text.RegularExpressions;
-
+using GraphicsBuilder;
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
 namespace Citect.E80.FunctionGenealogy
@@ -16,7 +16,7 @@ namespace Citect.E80.FunctionGenealogy
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public static List<CicodeFunctions> cicodefunctions = new List<CicodeFunctions>();
         private static LogCsv LogCsv;
-        private static string[] ExcludeDBF = new string[] { "computer", "contype", "cluster", "English", "groups", "include", "modems", "netaddr", "oid", "opcsrv", "pages", "profile", "protdir", "reports", "roles", "users", "units", "profile", "labels", "EWSSrv", "remap", "pglang", "ports", "scanner", "scrprfl", "trnsrv", "fonts", "devices", "boards" };
+        private static string[] ExcludeDBF = new string[] { "computer", "contype", "cluster", "English", "groups", "include", "modems", "netaddr", "oid", "OPCSrv", "profile", "protdir", "reports", "roles", "users", "units", "profile", "labels", "EWSSrv", "remap", "pglang", "ports", "scanner", "scrprfl", "trnsrv", "fonts", "devices", "boards" };
 
         /// <summary>
         /// get list of functions from ci file in root directory (includes subs)
@@ -44,7 +44,11 @@ namespace Citect.E80.FunctionGenealogy
                         {
                             string funcName = string.Empty;
                             var line = streamReader.ReadLine();
-                            if (string.IsNullOrEmpty(line) || line.StartsWith("//")) continue;
+                            if (string.IsNullOrEmpty(line) || line.StartsWith("//"))
+                            {
+                                lineNum++;
+                                continue;
+                            }
 
                             if (funcDefInNextLine)
                             {
@@ -102,7 +106,7 @@ namespace Citect.E80.FunctionGenealogy
         {
             var cicodefilelist = cicodefunctions.Select(a => new { a.FileName }).ToList();
 
-            
+
             foreach (var funcLoc in cicodefunctions)
             {
                 //search against all list cicode file contents for function ref.
@@ -113,31 +117,47 @@ namespace Citect.E80.FunctionGenealogy
                         //open the file stream
                         //check function against file stream
                         var found = 0;
+                        var lineNum = 1;
                         //get file name
                         var ciFile = file.FileName.Substring(file.FileName.LastIndexOf('\\'), file.FileName.IndexOf('.') - file.FileName.LastIndexOf('\\')).TrimStart(new char[] { '\\', '*', '?' });
                         using (var streamReader = new StreamReader(file.FileName))
-                        {                            
-                            try
+                        {
+                            while (!streamReader.EndOfStream)
                             {
-                                while (!streamReader.EndOfStream)
+                                //for debugging only
+                                //if (funcLoc.FileName.Contains("multimonitors") && file.FileName.Contains("multimonitors"))
+                                //    if (lineNum == 1148 && kvp.Value.Contains("_MMNumPadKey0"))
+                                //        log.Debug("stop test");
+
+                                try
                                 {
                                     var line = streamReader.ReadLine().Trim();
-                                    if (string.IsNullOrEmpty(line) || line.StartsWith("//") || line.Contains("FUNCTION") || line.EndsWith("*/") || line.StartsWith("/*") || line.StartsWith("!")) continue;
+                                    if (string.IsNullOrEmpty(line) || line.StartsWith("//") || line.Contains("FUNCTION") || line.EndsWith("*/") || line.StartsWith("/*") || line.StartsWith("!"))
+                                    {
+                                        lineNum++;
+                                        continue;
+                                    }
 
                                     //use pattern recognition
-                                    if (Regex.IsMatch(line, "(?<=^([^\"]|\"[^\"]*\")*)" + "\\b" + kvp.Value + "\\b"))
-                                        found++;
+                                    if (Regex.IsMatch(line, string.Format(@"(?<=^([^\""]|\""[^\""]*\"")*)\b{0}\b", kvp.Value)))
+                                    {
+                                        if (funcLoc.FileName.Equals(file.FileName) && lineNum.Equals(kvp.Key))
+                                        {
+                                            lineNum++;
+                                            continue;
+                                        }
 
-                                    //function found
-                                    //if (line.Contains(kvp.Value+"("))
-                                    //    found++;
+                                        found++;
+                                    }
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                log.Error("streamreader:error", ex);
+                                catch (Exception ex)
+                                {
+                                    log.Error("streamreader:error", ex);
+                                }
+                                lineNum++;
                             }
                         }
+
                         if (found > 0)
                         {
                             //locate function in the reference
@@ -157,21 +177,26 @@ namespace Citect.E80.FunctionGenealogy
                             }
                         }
                     }
-                    
                 }
             }
 
             LogCsv = new LogCsv(@"C:\QR_PSCS\Logs\FuncRefInCicode.csv", true);
+            LogCsv.WriteToFile("cicodeFile,Function Name,cicode File,References");
             foreach (var funcLoc in cicodefunctions)
             {
                 //search against all list cicode file contents for function ref.
-                var ciFile = funcLoc.FileName.Substring(funcLoc.FileName.LastIndexOf('\\'), funcLoc.FileName.IndexOf('.') -funcLoc.FileName.LastIndexOf('\\')).TrimStart(new char[] { '\\', '*', '?' });
+                var ciFile = funcLoc.FileName.Substring(funcLoc.FileName.LastIndexOf('\\'), funcLoc.FileName.IndexOf('.') - funcLoc.FileName.LastIndexOf('\\')).TrimStart(new char[] { '\\', '*', '?' });
 
                 foreach (var kvp in funcLoc.FunctionLocations)
                 {
                     //get value of kvp.value from dictionary
-                    var metaDetails = funcLoc.FunctionCicodeReferences[kvp.Value];
-                    metaDetails.ForEach(s => LogCsv.WriteToFile("{0},{1},{2},{3}", ciFile,kvp.Value, s.Name, s.ReferenceCount));
+                    if (funcLoc.FunctionCicodeReferences.ContainsKey(kvp.Value))
+                    {
+                        var metaDetails = funcLoc.FunctionCicodeReferences[kvp.Value];
+                        metaDetails.ForEach(s => LogCsv.WriteToFile("{0},{1},{2},{3}", ciFile, kvp.Value, s.Name, s.ReferenceCount));
+                    }
+                    else
+                        LogCsv.WriteToFile("{0},{1},{2},{3}", ciFile, kvp.Value, "", 0);
                 }
             }
 
@@ -188,28 +213,25 @@ namespace Citect.E80.FunctionGenealogy
         /// setup the project dbfs.
         /// </summary>
         /// <param name="root"></param>
+        /// <param name="projectprefix"></param>
         /// <returns></returns>
-        public static bool GetProjectDBF(string root, string projectprefix)
+        public static bool FunctionRefExistInDBFs(string root, string projectprefix)
         {
             var path = Path.GetDirectoryName(root);
             var searchList = Directory.GetFiles(path, "*.dbf", SearchOption.AllDirectories);
             var dbflistToSearch = new Dictionary<string, string>();
+            var dbfReadList = new Dictionary<string, DbfTable>();
 
             foreach (var file in searchList)
             {
-                if (!file.Contains(projectprefix) || file.Contains("_FUNCSYM")) continue;
+                if (!file.Contains(projectprefix) || file.Contains("_FUNCSYM") || file.Contains("_funcsym")) continue;
 
                 var tableName = file.Substring(file.LastIndexOf('\\'), file.IndexOf('.') - file.LastIndexOf('\\')).TrimStart(new char[] { '\\', '*', '?' });
-                /*var datatable = ReadDbf.GetTable(file, tableName);
-
-                if (datatable.Rows.Count == 0)
-                {
-                    log.WarnFormat("no rows returned for {0}", tableName);
-                    continue;
-                }*/
 
                 //exclude dbf in excluded list
                 if (ExcludeDBF.Contains(tableName)) continue;
+
+                //dbfReadList.Add(file, new DbfTable(file, System.Text.Encoding.UTF8));
 
                 dbflistToSearch.Add(file, tableName);
 
@@ -236,22 +258,28 @@ namespace Citect.E80.FunctionGenealogy
                 }
             }
 
+
             LogCsv = new LogCsv(@"C:\QR_PSCS\Logs\cicodefuncDBFRef.csv", true);
             LogCsv.WriteToFile("FunctionName,Path,DBF,References");
             foreach (var funcLoc in cicodefunctions)
             {
-                foreach (var kvpfunc in funcLoc.FunctionLocations)
+                foreach (var kvpfunc in funcLoc.FunctionLocations)  //key is the line number, value is the functionName
                 {
                     var funcsearch = DateTime.UtcNow;
-                    foreach (var kvp in dbflistToSearch)
+                    foreach (var kvp in dbflistToSearch)    //key is tablename, value is dbftable object
                     {
+                        var tableName = kvp.Key.Substring(kvp.Key.LastIndexOf('\\'), kvp.Key.IndexOf('.') - kvp.Key.LastIndexOf('\\')).TrimStart(new char[] { '\\', '*', '?' });
+
                         var datettime = DateTime.UtcNow;
+                        //var refcount = FunctionRefExistsInDBF(kvp.Value, kvpfunc.Value);
                         var refcount = FunctionRefExistsInDBF(kvp.Key, kvpfunc.Value);
                         var dbfmeta = funcLoc.FunctionDBFReferences[kvpfunc.Value];
                         CicodeMetaDetails metaDetails = null;
+
+                        //find from cicodemeta list in dbf references
                         if (funcLoc.FunctionDBFReferences.ContainsKey(kvpfunc.Value))
                         {
-                            metaDetails = dbfmeta.FirstOrDefault(s => s.Name == kvp.Value);
+                            metaDetails = dbfmeta.FirstOrDefault(s => s.Name == tableName);
                         }
 
                         if (metaDetails == null)
@@ -261,45 +289,53 @@ namespace Citect.E80.FunctionGenealogy
                         }
 
                         if (refcount > 0)
-                        {
                             metaDetails.ReferenceCount += refcount;
-                            LogCsv.WriteToFile("{0},{1},{2},{3}", kvpfunc.Value, kvp.Key, metaDetails.Name, metaDetails.ReferenceCount);
-                        }
 
-                        log.DebugFormat("time to search dbf {0}-{1}", metaDetails.Name, DateTime.UtcNow.Subtract(datettime).TotalMilliseconds);
+                        LogCsv.WriteToFile("{0},{1},{2},{3}", kvpfunc.Value, kvp.Key, metaDetails.Name, metaDetails.ReferenceCount);
+
+                        //log.DebugFormat("time to search dbf {0}-{1}", metaDetails.Name, DateTime.UtcNow.Subtract(datettime).TotalMilliseconds);
                     }
-                    log.DebugFormat("Total time {0} to search dbfs:{1} for {2} ", DateTime.UtcNow.Subtract(funcsearch).TotalMilliseconds, dbflistToSearch.Count, kvpfunc.Value);
+                    log.DebugFormat("Total time:{0} - dbfs {1} for {2} ", DateTime.UtcNow.Subtract(funcsearch).TotalMilliseconds, dbflistToSearch.Count, kvpfunc.Value);
                 }
-
             }
+
+            //release all resources
+            //foreach (var kvp in dbfReadList)
+            //    kvp.Value.Dispose();
+
             LogCsv.CloseFile();
             return true;
         }
 
-        //public static void PrintFunctionReferences()
-        //{
-        //    var logcsv = new LogCsv(@"C:\QR_PSCS\Logs\cicodefuncRef.csv", true);
-        //    logcsv.WriteToFile("FunctionName,DBF,References");
-        //    foreach (var listfunc in cicodefunctions)
-        //    {
-        //        foreach (var kvp in listfunc.FunctionLocations)
-        //        {
 
-        //            if (listfunc.FunctionDBFReferences.ContainsKey(kvp.Value))
-        //            {
-        //                var funcRef = listfunc.FunctionDBFReferences.FirstOrDefault(s => s.Key == kvp.Value);
-        //                {
-        //                    foreach (var item in funcRef.Value)
-        //                    {
-        //                        logcsv.WriteToFile("{0},{1},{2}", kvp.Value, item.Name, item.ReferenceCount);
-        //                    }
-        //                }
-        //            }
 
-        //        }
-        //    }
-        //    logcsv.CloseFile();
-        //}
+        /// <summary>
+        /// overloaded
+        /// </summary>
+        /// <param name="dbfTable"></param>
+        /// <param name="functionName"></param>
+        /// <returns></returns>
+        private static int FunctionRefExistsInDBF(DbfTable dbfTable, string functionName)
+        {
+            var dbfRecord = new DbfRecord(dbfTable);
+            var found = 0;
+            var skipDeleted = true;
+
+            while (dbfTable.Read(dbfRecord))
+            {
+                if (skipDeleted && dbfRecord.IsDeleted)
+                    continue;
+
+                if (dbfRecord.Values.Any(s => s.GetValue().ToString().Contains(functionName)))
+                {
+                    found++;
+                }
+            }
+
+            return found;
+        }
+
+
 
         /// <summary>
         /// find reference of function name in dbf
@@ -328,7 +364,6 @@ namespace Citect.E80.FunctionGenealogy
                             break;
                         }
                     }
-
                     return found;
                 }
                 catch (Exception ex)

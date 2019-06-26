@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Citect.E80.FunctionGenealogy;
+﻿using Citect.E80.FunctionGenealogy;
+
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
 namespace FunctionGenealogyConsole
 {
@@ -19,10 +16,9 @@ namespace FunctionGenealogyConsole
             logCsv.CloseFile();
             //list of function ref in cicode
             FunctionDictionary.FunctionRefExistInCicode();
-
             
             //list of function ref in dbf           
-            FunctionDictionary.GetProjectDBF(@"C:\ProgramData\Schneider Electric\Citect SCADA 2016\User", "QRTP");
+            //FunctionDictionary.FunctionRefExistInDBFs(@"C:\ProgramData\Schneider Electric\Citect SCADA 2016\User", "QRTP");
 
         }
     }
