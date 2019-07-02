@@ -52,17 +52,24 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="EquipmentTypeXML_Test.cs" />
+    <Compile Include="FunctionGenealogy_Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Citect.E80.EquipmentTypeXml\Citect.E80.EquipmentTypeXml.csproj">
+      <Project>{e6bc543a-5144-46f4-b9d0-3666df96cc4e}</Project>
+      <Name>Citect.E80.EquipmentTypeXml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Citect.E80.FunctionGenealogy\Citect.E80.FunctionGenealogy.csproj">
       <Project>{3008f6d0-fd9a-4b8c-bd76-03e0eaee2a06}</Project>
       <Name>Citect.E80.FunctionGenealogy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
