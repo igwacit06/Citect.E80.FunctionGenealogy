@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using log4net;
 using System.IO;
 
@@ -148,6 +146,8 @@ namespace Citect.E80.FunctionGenealogy
                         try
                         {
                             GraphicsBuilder.LibraryObjectNextProperty(out propertyName, out propertyVal);
+                            //GraphicsBuilder.CompositeGeniePlace(new Guid(""), new Array[8] { "5", "6", "7", "78", "8","0","0","0" }, 0, 0);
+                            
                             log.DebugFormat("propertyName:{0}|propertyvalue:{1}", propertyName, propertyVal);
                         }
                         catch (Exception ex)
@@ -165,6 +165,7 @@ namespace Citect.E80.FunctionGenealogy
                 }
                 catch (Exception ex)
                 {
+                    log.Error("GetGenies()", ex);
                     break;
                 }
             }

@@ -26,26 +26,28 @@ namespace Citect.E80.EquipmentTypeXml
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private DataSet CitectTags;
-        private readonly List<template> EquipmentTypeTemplates;        
+        private List<DataSet> CitectTagsDataSet;
+        private readonly List<template> EquipmentTypeTemplates;
         //read from excel
         //convert to xml equipment type?
         //special cases?
         public EquipmentTypeGenerate()
         {
-            CitectTags = new DataSet();
-            EquipmentTypeTemplates = new List<template>();            
+            CitectTagsDataSet = new List<DataSet>();
+            EquipmentTypeTemplates = new List<template>();
             GetExcelTemplateFromDirectory();
         }
 
+        /// <summary>
+        /// get excel template from specified directory
+        /// </summary>
         private void GetExcelTemplateFromDirectory()
         {
             var path = System.Configuration.ConfigurationManager.AppSettings["EqTypePath"];
-            var directoryInfo = new DirectoryInfo(path);            
+            var directoryInfo = new DirectoryInfo(path);
             foreach (var fileinfo in directoryInfo.GetFiles())
                 GetCitectTagsFromExcel(fileinfo.FullName);
         }
-
 
         /// <summary>
         /// 
@@ -59,7 +61,8 @@ namespace Citect.E80.EquipmentTypeXml
                 {
                     using (var reader = ExcelReaderFactory.CreateReader(stream))
                     {
-                        CitectTags = reader.AsDataSet(new ExcelDataSetConfiguration { ConfigureDataTable = (tableReader) => configuredatatable });
+
+                        CitectTagsDataSet.Add(reader.AsDataSet(new ExcelDataSetConfiguration { ConfigureDataTable = (tableReader) => configuredatatable }));
                     }
                 }
             }
@@ -69,14 +72,24 @@ namespace Citect.E80.EquipmentTypeXml
             }
         }
 
+        public bool Execute_SetupTags()
+        {
+            if (!CitectTagsDataSet.Any())
+                return false;
+
+
+            CitectTagsDataSet.ForEach(s => ConvertTagsInExcelToTemplate(s));
+            return true;
+        }
+
         /// <summary>
         /// 
         /// </summary>
-        public bool ConvertTagsInExcelToTemplate()
+        public bool ConvertTagsInExcelToTemplate(DataSet ds)
         {
-            foreach (DataTable dtTable in CitectTags.Tables)
-            {
 
+            foreach (DataTable dtTable in ds.Tables)
+            {
                 var equipmentTypeTemplate = new template { desc = dtTable.TableName }; //name of worksheet - equipment type name
                 equipmentTypeTemplate.param = TomPriceEquipmentTemplate.GetEquipmentType_Param(dtTable.TableName, "");
                 equipmentTypeTemplate.input = TomPriceEquipmentTemplate.GetEquipmentType_Input();
@@ -88,26 +101,28 @@ namespace Citect.E80.EquipmentTypeXml
 
                 //put the information into class
                 var outputparams = new List<EquipmentTypeOutputParam>();
+                string equipment = "";
                 foreach (DataRow row in dtTable.AsEnumerable().Skip(3))
                 {
                     //inner exception
                     if (row.IsNull("Tag Name")) continue;
                     string tagName = row["Tag Name"].ToString();
-                    var nameSplit = tagName.Split(new char[] { '_', '.' });                    
+                    equipment = row.IsNull("Equipment") ? equipment : row["Equipment"].ToString();
+                    var nameSplit = tagName.Split(new char[] { '_', '.' });
+                    
                     try
                     {
-                        int plcNumericAddress = int.Parse(Regex.Match(row["Address"].ToString(), @"\d+").Value);
-
-                        outputparams.Add(new EquipmentTypeOutputParam
+                        int.TryParse(Regex.Match(row["Address"].ToString(), @"\d+").Value, out int plcNumericAddress);
+                        var outputparam = new EquipmentTypeOutputParam
                         {
                             EquipName = dtTable.TableName.Replace(" ", string.Empty),
                             Comment = row["Comment"].ToString(),
                             DataType = row["Data Type"].ToString(),
-                            Suffix = nameSplit.Length > 3 ? string.Join("_", nameSplit, 3, nameSplit.Length - 3) : nameSplit[nameSplit.Length - 1],
+                            Suffix = tagName.Substring(tagName.IndexOf(equipment) + equipment.Length),  //suffix is anything after equipment name string
                             Prefix = nameSplit[0],
                             BaseAddrPairs = baseAddressList,
                             BaseAddressParam = GetBaseAddrParam(nameSplit[0]),
-                            TagAddress = plcNumericAddress,
+                            TagAddress = plcNumericAddress,                                                        
                             RawZero = row.IsNull("Raw Zero Scale") ? "0" : row["Raw Zero Scale"].ToString(),
                             RawFull = row.IsNull("Raw Full Scale") ? "0" : row["Raw Full Scale"].ToString(),
                             EngZero = row.IsNull("Eng Zero Scale") ? "0" : row["Eng Zero Scale"].ToString(),
@@ -115,7 +130,16 @@ namespace Citect.E80.EquipmentTypeXml
                             SetTrends = row.IsNull("Set Trend") ? false : bool.Parse(row["Set Trend"].ToString()),
                             Units = row.IsNull("Eng Units") ? string.Empty : row["Eng Units"].ToString(),
                             Format = row.IsNull("Format") ? string.Empty : row["Format"].ToString()
-                        });
+                        };
+
+                        if (!row.IsNull(@"I/O Device"))
+                        {
+                            outputparam.DeviceIO = row["I/O Device"].ToString();                            
+                            outputparam.FuncName = row["Address"].ToString();
+                            outputparam.IsCalulated = true;
+                        }                        
+
+                        outputparams.Add(outputparam);
                     }
                     catch (Exception ex)
                     {
@@ -123,11 +147,17 @@ namespace Citect.E80.EquipmentTypeXml
                     }
                 }
 
-                outputparams.ForEach(s => templateOutputs.AddRange(s.GetTemplateOutput()));
+                //find duplicates in list?
+                var result = outputparams.GroupBy(x => x.Suffix.TrimStart(new char[] { '_', '.', ',' })).Select(y => new { suffix = y.Key, count = y.Count() });
+                foreach (var rec in result.Where(a => a.count > 1))
+                    log.WarnFormat("Please correct tag list: possible duplication of tags, suffux: {0} for {1}", rec.suffix, dtTable.TableName);
 
+                //get xml formatted string from outputparams
+                outputparams.ForEach(s => templateOutputs.AddRange(s.GetXmlTemplateOutput()));
                 if (templateOutputs.Count > 0)
                     equipmentTypeTemplate.output = templateOutputs.ToArray();
 
+                //add to list
                 EquipmentTypeTemplates.Add(equipmentTypeTemplate);
 
             }
@@ -168,9 +198,9 @@ namespace Citect.E80.EquipmentTypeXml
             ns.Add("", "");
             //foreach output to xml .output template to xml.
             if (template == null) return false;
-            
+
             XmlSerializer xs = new XmlSerializer(typeof(template));
-            using (var txtwriter = new StreamWriter(@"C:\CodeTest\EquipmentTypes\Output\" + equipmenttype + ".xml" , false, Encoding.UTF8))
+            using (var txtwriter = new StreamWriter(@"C:\CodeTest\EquipmentTypes\Output\" + equipmenttype + ".xml", false, Encoding.UTF8))
             {
                 xs.Serialize(txtwriter, template, ns);
             }

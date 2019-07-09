@@ -6,19 +6,30 @@ namespace Citect.E80.FunctionGenealogyTest
     [TestClass]
     public class EquipmentTypeXML_Test
     {
+        public TestContext TestContext { get; set; }
+
         [TestMethod]
         public void EquipmentTypeGenerate_ShouldNotBeNull()
         {
-            var testgenerate = new EquipmentTypeXml.EquipmentTypeGenerate();   
-            Assert.IsTrue(testgenerate.ConvertTagsInExcelToTemplate());
+            var CitectEquipmentTypeGenerate = new EquipmentTypeXml.EquipmentTypeGenerate();   
+            Assert.IsTrue(CitectEquipmentTypeGenerate.Execute_SetupTags());
         }
 
 
         [TestMethod]
         public void RegexTest()
         {
-            string value = "343532";
+            string match = "BP04";
+            string value = "S_SFC_BP04_COMMS_OK";
             var output = Regex.Match(value, "\\d+");
+
+            var test = value.Substring(value.IndexOf(match) + match.Length);            
+            TestContext.WriteLine("test:{0}", test.TrimStart(new char[] { '_', '.', ',' }));
+
+
+            var test2 = "auto";
+            test = char.ToUpper(test2[0]) + test2.Substring(1);
+            TestContext.WriteLine("value:{0}", test);
         }
     }
 }
