@@ -36,8 +36,9 @@ namespace Citect.E80.EquipmentTypeXml
         public string Format { get; set; }        
         public string FuncName { get; set; }
         public string DeviceIO { get; set; }
+        public string AlmCategory { get; set; }
         public bool SetTrends { get; set; }
-        public bool IsCalulated { get; set; }
+        public bool IsCalulated { get; set; }        
         public Dictionary<string, int> BaseAddrPairs { get; set; } = new Dictionary<string, int>();
 
         /// <summary>

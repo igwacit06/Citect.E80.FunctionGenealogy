@@ -160,7 +160,7 @@ namespace Citect.E80.EquipmentTypeXml
                 new templateOutputField { name = "VAR_A", Value = string.Format("{0}_{{equipment.tagprefix}}{1}",fieldParam.Prefix,fieldParam.Suffix) },
                 new templateOutputField{ name= "comment", Value=""},
                 new templateOutputField { name = "cluster", key= true, Value = fieldParam.Cluster, keySpecified = true },
-                new templateOutputField{ name= "category", Value=""},
+                new templateOutputField{ name= "category", Value=fieldParam.AlmCategory},
                 new templateOutputField { name = "equip", Value = fieldParam.Equipment },
                 new templateOutputField { name = "item", Value = CapsFirstLetter( fieldParam.Suffix.TrimStart(new char[] {',','_','.'}).ToLower()) },
                 new templateOutputField { name = "taggenlink", load = true, Value= fieldParam.TagGenLink, loadSpecified = true },
