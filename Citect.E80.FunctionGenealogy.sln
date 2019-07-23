@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionGenealogyConsole", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.E80.EquipmentTypeXml", "Citect.E80.EquipmentTypeXml\Citect.E80.EquipmentTypeXml.csproj", "{E6BC543A-5144-46F4-B9D0-3666DF96CC4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.E80.BulkDBFUpdates", "Citect.E80.BulkDBFUpdates\Citect.E80.BulkDBFUpdates.csproj", "{FB8400CF-F9E9-49D7-98F5-E2C5B7043D74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.E80.TagsBuilder", "Citect.E80.TagsBuilder\Citect.E80.TagsBuilder.csproj", "{D22B8E04-C1AE-4EDD-8F32-299027DAC2E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{E6BC543A-5144-46F4-B9D0-3666DF96CC4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6BC543A-5144-46F4-B9D0-3666DF96CC4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6BC543A-5144-46F4-B9D0-3666DF96CC4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB8400CF-F9E9-49D7-98F5-E2C5B7043D74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB8400CF-F9E9-49D7-98F5-E2C5B7043D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB8400CF-F9E9-49D7-98F5-E2C5B7043D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB8400CF-F9E9-49D7-98F5-E2C5B7043D74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D22B8E04-C1AE-4EDD-8F32-299027DAC2E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D22B8E04-C1AE-4EDD-8F32-299027DAC2E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D22B8E04-C1AE-4EDD-8F32-299027DAC2E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D22B8E04-C1AE-4EDD-8F32-299027DAC2E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
