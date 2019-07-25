@@ -19,7 +19,7 @@ namespace Citect.E80.BulkDBFUpdates
     public class DBFAutomation
     {
         private readonly string[] WorkSheetNames = new string[] { "Gens", "DMC Alarms", "Load Demand", "LV&Tx CBs", "Gen Annunciator", "Gas Gens", "Mill Starting", "BOP", "Q101-8 CBs", "Tariff Meters", "Dsl Flow", "Air Compressor", "751 PRs", "700G PRs", "Gas Skid", "HMI Cmds", "Misc Analogs", "Batt Chargers", "VSDs", "Command Statuses", "Gas Flow Meters", "FIP" };
-
+        private readonly List<string> TagNoAddr = new List<string>();
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private DataSet DataMapDS = new DataSet();
 
@@ -75,14 +75,19 @@ namespace Citect.E80.BulkDBFUpdates
                     if (row.IsNull("TAG") || int.TryParse(row["TAG"].ToString(), out int result)) continue;
 
                     string rowline = string.Empty;
+                    bool addToMap = false;
                     foreach (var fieldName in TrendFields)
                     {
+                        if (fieldName.Equals("EXPR"))
+                            addToMap = TagNoAddr.Contains(row["EXPR"].ToString()) ? false : true;
+
                         if (dt.Columns.Contains(fieldName))
                             rowline += row.IsNull(fieldName) ? "," : Regex.Replace(row[fieldName].ToString(), ",", "") + ",";
                         else
                             rowline += ",";
                     }
-                    rowLines.Add(rowline);
+                    if (addToMap)
+                        rowLines.Add(rowline);
                 }
 
                 DataMap.Add(dt.TableName, rowLines);
@@ -108,14 +113,20 @@ namespace Citect.E80.BulkDBFUpdates
                     if (row.IsNull("TAG") || int.TryParse(row["TAG"].ToString(), out int result)) continue;
 
                     string rowline = string.Empty;
+                    bool addToMap = false;
                     foreach (var fieldName in DigiAlmFields)
-                    {                        
+                    {
+                        if (fieldName.Equals("VAR_A"))
+                            addToMap = TagNoAddr.Contains(row["VAR_A"].ToString()) ? false : true;
+
+
                         if (dt.Columns.Contains(fieldName))
                             rowline += row.IsNull(fieldName) ? "," : Regex.Replace(row[fieldName].ToString(), ",", "") + ",";
                         else
                             rowline += ",";
                     }
-                    rowLines.Add(rowline);
+                    if (addToMap)
+                        rowLines.Add(rowline);
                 }
 
                 DataMap.Add(dt.TableName, rowLines);
@@ -129,10 +140,10 @@ namespace Citect.E80.BulkDBFUpdates
         private void ReadVariableDataMap(string[] worksheets)
         {
             var VariableFields = new List<string>() { "NAME", "TYPE", "UNIT_2", "ADDR", "RAW_ZERO\nMANUAL", "RAW_FULL\nMANUAL", "ENG_ZERO\nMANUAL", "ENG_FULL\nMANUAL", "ENG_UNITS", "FORMAT\nMANUAL", "COMMENT", "EDITCODE", "LINKED", "OID", "REF1", "REF2", "DEADBAND", "CUSTOM", "TAGGENLINK", "CLUSTER" };
-            var TagNoAddr = new List<string>();
+
             var DataMap = new Dictionary<string, List<string>>();
             foreach (DataTable dt in DataMapDS.Tables)
-            {                
+            {
                 try
                 {
 
@@ -152,9 +163,9 @@ namespace Citect.E80.BulkDBFUpdates
                                 if (fieldName == "ADDR")
                                 {
                                     noaddr = row.IsNull(fieldName) ? true : false;
-                                    if (noaddr)                                    
+                                    if (noaddr)
                                         TagNoAddr.Add(row["NAME"].ToString());
-                                    
+
                                 }
 
                                 //noaddr = dt.Columns.Equals("ADDR") && row.IsNull(fieldName) ? true : false;
