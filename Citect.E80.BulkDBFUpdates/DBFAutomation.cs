@@ -179,6 +179,7 @@ namespace Citect.E80.BulkDBFUpdates
 
                         rowLines.Add(rowline);
                     }
+
                     DataMap.Add(dt.TableName, rowLines);
                     TagNoAddr.ForEach(s => log.DebugFormat("Tags Missing Address: {0}", s));
                 }
@@ -208,10 +209,9 @@ namespace Citect.E80.BulkDBFUpdates
             {
                 if (kvp.Key != currsheet)
                 {
-                    log.DebugFormat("writing {0} tags for {1}", dbfType, currsheet);
+                    log.DebugFormat("writing {0} tags for {1} with {2} tags", dbfType, currsheet, kvp.Value.Count);
                     currsheet = kvp.Key;
                 }
-
                 kvp.Value.ForEach(s => csv.WriteToFile("{0}", s));
             }
             csv.CloseFile();
