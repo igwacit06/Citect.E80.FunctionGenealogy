@@ -73,6 +73,7 @@ namespace Citect.E80.BulkDBFUpdates
                 foreach (DataRow row in dt.AsEnumerable()) //row 1 is title, row 2 are fieldName in data map sheet
                 {
                     if (row.IsNull("TAG") || int.TryParse(row["TAG"].ToString(), out int result)) continue;
+                    if (row.IsNull("CLUSTER_2")) continue;
 
                     string rowline = string.Empty;
                     bool addToMap = false;
@@ -111,6 +112,7 @@ namespace Citect.E80.BulkDBFUpdates
                 foreach (DataRow row in dt.AsEnumerable()) //row 1 is title, row 2 are fieldName in data map sheet
                 {
                     if (row.IsNull("TAG") || int.TryParse(row["TAG"].ToString(), out int result)) continue;
+                    if (row.IsNull("CLUSTER_1")) continue;
 
                     string rowline = string.Empty;
                     bool addToMap = false;
@@ -153,6 +155,7 @@ namespace Citect.E80.BulkDBFUpdates
                     foreach (DataRow row in dt.AsEnumerable()) //row 1 is title, row 2 are fieldName in data map sheet
                     {
                         if (row.IsNull("NAME") || int.TryParse(row["NAME"].ToString(), out int result)) continue;
+                        if (row.IsNull("CLUSTER")) continue;
 
                         string rowline = string.Empty;
                         bool noaddr = false;
