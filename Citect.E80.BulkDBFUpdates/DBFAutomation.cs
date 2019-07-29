@@ -62,7 +62,7 @@ namespace Citect.E80.BulkDBFUpdates
         //get all variable,digital,trend data from each table
         private void ReadTrendDataMap(string[] worksheets)
         {
-            var TrendFields = new List<string>() { "NAME_2", "EXPR", "TRIG", "SAMPLEPERMANUAL", "PRIV_1", "AREA_1", "ENG_UNITS_1", "FORMAT", "FILENAME", "FILES", "TIME", "PERIOD", "COMMENT_2", "TYPE", "SPCFLAG", "LSL", "USL", "SUBGRPSIZE", "XDOUBLEBAR", "RANGE", "SDEVIATION", "STORMETHOD", "CLUSTER_2" };
+            var TrendFields = new List<string>() { "NAME_2", "EXPR", "TRIG", "SAMPLEPER\nMANUAL", "PRIV_1", "AREA_1", "ENG_UNITS_1", "FORMAT", "FILENAME", "FILES", "TIME", "PERIOD", "COMMENT_2", "TYPE", "SPCFLAG", "LSL", "USL", "SUBGRPSIZE", "XDOUBLEBAR", "RANGE", "SDEVIATION", "STORMETHOD", "CLUSTER_2" };
 
             var DataMap = new Dictionary<string, List<string>>();
             foreach (DataTable dt in DataMapDS.Tables)
@@ -71,8 +71,7 @@ namespace Citect.E80.BulkDBFUpdates
 
                 var rowLines = new List<string>();
                 foreach (DataRow row in dt.AsEnumerable()) //row 1 is title, row 2 are fieldName in data map sheet
-                {
-                    if (row.IsNull("TAG") || int.TryParse(row["TAG"].ToString(), out int result)) continue;
+                {                   
                     if (row.IsNull("CLUSTER_2")) continue;
 
                     string rowline = string.Empty;
@@ -207,14 +206,10 @@ namespace Citect.E80.BulkDBFUpdates
             var newFieldList = dbfFields.Select(s => Regex.Replace(s, "\n|\t|\r", "")).ToList();
 
             csv.WriteToFile("{0}", string.Join(",", newFieldList));
-            var currsheet = "";
+            
             foreach (var kvp in DataMap)
             {
-                if (kvp.Key != currsheet)
-                {
-                    log.DebugFormat("writing {0} tags for {1} with {2} tags", dbfType, currsheet, kvp.Value.Count);
-                    currsheet = kvp.Key;
-                }
+                log.DebugFormat("writing {0} tags for {1} with {2} tags", dbfType, kvp.Key, kvp.Value.Count);                
                 kvp.Value.ForEach(s => csv.WriteToFile("{0}", s));
             }
             csv.CloseFile();
