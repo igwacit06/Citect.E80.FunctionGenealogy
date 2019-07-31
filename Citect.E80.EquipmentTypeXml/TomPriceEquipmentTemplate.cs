@@ -46,7 +46,7 @@ namespace Citect.E80.EquipmentTypeXml
         {
             templateOutput templateOutput = new templateOutput { name = string.Format("Var.{0}Cmd", fieldParam.Suffix.TrimStart(new char[] { ',', '_', '.' })), file = "variable.dbf", filter = @"'{equipment.type}={type.name}'" };
 
-            var funcArgs = string.Format("C_{{equipment.tagprefix}}{0}", fieldParam.Suffix);
+            var funcArgs = string.Format("C_{{equipment.tagprefix}}_{0}", fieldParam.Suffix);
             var tagaddressvalue = string.Format("{0}({1})", fieldParam.FuncName, funcArgs);
 
             var outputFields = new List<templateOutputField>

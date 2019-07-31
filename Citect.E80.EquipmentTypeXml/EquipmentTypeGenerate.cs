@@ -118,7 +118,7 @@ namespace Citect.E80.EquipmentTypeXml
                             EquipName = dtTable.TableName.Replace(" ", string.Empty),
                             Comment = row["Comment"].ToString(),
                             DataType = row["Data Type"].ToString(),
-                            Suffix = tagName.Substring(tagName.IndexOf(equipment) + equipment.Length),  //suffix is anything after equipment name string
+                            Suffix = tagName.Substring(tagName.IndexOf(equipment) + equipment.Length).TrimStart(new char[] { '_','.',',','|' }),  //suffix is anything after equipment name string
                             Prefix = nameSplit[0],
                             BaseAddrPairs = baseAddressList,
                             BaseAddressParam = GetBaseAddrParam(nameSplit[0]),
