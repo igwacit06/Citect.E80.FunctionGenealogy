@@ -87,7 +87,6 @@ namespace Citect.E80.EquipmentTypeXml
         /// </summary>
         public bool ConvertTagsInExcelToTemplate(DataSet ds)
         {
-
             foreach (DataTable dtTable in ds.Tables)
             {
                 var equipmentTypeTemplate = new template { desc = dtTable.TableName }; //name of worksheet - equipment type name
@@ -109,7 +108,7 @@ namespace Citect.E80.EquipmentTypeXml
                     string tagName = row["Tag Name"].ToString();
                     equipment = row.IsNull("Equipment") ? equipment : row["Equipment"].ToString();
                     var nameSplit = tagName.Split(new char[] { '_', '.' });
-                    
+
                     try
                     {
                         int.TryParse(Regex.Match(row["Address"].ToString(), @"\d+").Value, out int plcNumericAddress);
@@ -118,7 +117,7 @@ namespace Citect.E80.EquipmentTypeXml
                             EquipName = dtTable.TableName.Replace(" ", string.Empty),
                             Comment = row["Comment"].ToString(),
                             DataType = row["Data Type"].ToString(),
-                            Suffix = tagName.Substring(tagName.IndexOf(equipment) + equipment.Length).TrimStart(new char[] { '_','.',',','|' }),  //suffix is anything after equipment name string
+                            Suffix = tagName.Substring(tagName.IndexOf(equipment) + equipment.Length).TrimStart(new char[] { '_', '.', ',', '|' }),  //suffix is anything after equipment name string
                             Prefix = nameSplit[0],
                             BaseAddrPairs = baseAddressList,
                             BaseAddressParam = GetBaseAddrParam(nameSplit[0]),
@@ -135,9 +134,16 @@ namespace Citect.E80.EquipmentTypeXml
 
                         if (!row.IsNull(@"I/O Device"))
                         {
-                            outputparam.DeviceIO = row["I/O Device"].ToString();                            
-                            outputparam.FuncName = row["Address"].ToString();
-                            outputparam.IsCalulated = true;
+                            if (row["I/O Device"].ToString().Equals("CICODESVR"))
+                            {
+                                outputparam.DeviceIO = row["I/O Device"].ToString();
+                                outputparam.FuncName = row["Address"].ToString();
+                                outputparam.IsCalCulated = true;
+                            }
+                            else
+                            {
+                                outputparam.DeviceIO = row["I/O Device"].ToString();
+                            }
                         }                        
 
                         outputparams.Add(outputparam);

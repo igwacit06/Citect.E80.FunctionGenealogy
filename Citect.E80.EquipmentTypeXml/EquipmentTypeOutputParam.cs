@@ -38,7 +38,7 @@ namespace Citect.E80.EquipmentTypeXml
         public string DeviceIO { get; set; }
         public string AlmCategory { get; set; }
         public bool SetTrends { get; set; }
-        public bool IsCalulated { get; set; }        
+        public bool IsCalCulated { get; set; }        
         public Dictionary<string, int> BaseAddrPairs { get; set; } = new Dictionary<string, int>();
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Citect.E80.EquipmentTypeXml
             DeviceIO = "{equipment.IODEVICE}";
             Equipment = "{equipment.name}";
             Cluster = "{equipment.cluster}";
-            IsCalulated = false;
+            IsCalCulated = false;
 
         }
 
@@ -91,7 +91,7 @@ namespace Citect.E80.EquipmentTypeXml
             }
 
             //create calculated variable (if specified)
-            if (IsCalulated)            
+            if (IsCalCulated)            
                 templateOutputs.Add(TomPriceEquipmentTemplate.GetEquipmentType_CalculatedCommandVariable(this));
             
             return templateOutputs;

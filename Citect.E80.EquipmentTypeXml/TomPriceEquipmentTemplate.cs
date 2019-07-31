@@ -9,7 +9,7 @@ namespace Citect.E80.EquipmentTypeXml
     public class TomPriceEquipmentTemplate
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private const string editcode = "3939343";        
+        private const string editcode = "3939343";
 
         /// <summary>
         /// Define Input section of Equipment Type xml template
@@ -53,13 +53,13 @@ namespace Citect.E80.EquipmentTypeXml
             {
                 new templateOutputField { name = "name", key=true, Value = string.Format("{{equipment.tagprefix}}{0}Cmd",fieldParam.Suffix), keySpecified=true},
                 new templateOutputField { name = "type", Value = fieldParam.DataType },
-                new templateOutputField { name = "unit", Value = fieldParam.DeviceIO },                
-                new templateOutputField { name = "comment", Value = "{equipment.tagprefix} " + fieldParam.Comment },   
+                new templateOutputField { name = "unit", Value = fieldParam.DeviceIO },
+                new templateOutputField { name = "comment", Value = "{equipment.tagprefix} " + fieldParam.Comment },
                 new templateOutputField { name = "equip", Value = fieldParam.Equipment },
                 new templateOutputField { name= "addr", Value = tagaddressvalue},
                 new templateOutputField { name = "item", Value = fieldParam.Suffix.TrimStart(new char[] {',','_','.'}) + "Cmd"},
                 new templateOutputField { name = "taggenlink", load = true, Value = fieldParam.TagGenLink+"Cmd" , loadSpecified=true },
-                new templateOutputField { name = "linked", Value = "1"},                
+                new templateOutputField { name = "linked", Value = "1"},
                 new templateOutputField { name = "editcode", Value = editcode }
             };
 
@@ -113,30 +113,54 @@ namespace Citect.E80.EquipmentTypeXml
         public static templateOutput GetEquipmentType_VarAnalogOutputs(EquipmentTypeOutputParam fieldParam)
         {
             templateOutput templateOutput = new templateOutput { name = "Var." + fieldParam.Suffix.TrimStart(new char[] { ',', '_', '.' }), file = "variable.dbf", filter = @"'{equipment.type}={type.name}'" };
-            var tagaddressvalue = "{equipment.BaseAddr[" + fieldParam.BaseAddressParam.ToString() + "]} + " + fieldParam.AddressOffset.ToString();
-            var templateOutputCalculator = new templateOutputCalculator { name = "TagAddress", Value = tagaddressvalue };
-            var outputFields = new List<templateOutputField>
+
+            if (fieldParam.DeviceIO.Contains("IODEVICE"))
             {
-                new templateOutputField { name = "name", key=true, Value =string.Format("{0}_{{equipment.tagprefix}}{1}",fieldParam.Prefix,fieldParam.Suffix) , keySpecified = true },
-                new templateOutputField { name = "type", Value = fieldParam.DataType },
-                new templateOutputField { name = "unit", Value = fieldParam.DeviceIO },
-                new templateOutputField { name = "eng_zero", Value = fieldParam.EngZero },
-                new templateOutputField { name = "eng_full", Value = fieldParam.EngFull},
-                new templateOutputField { name = "comment", Value = "{equipment.tagprefix} " + fieldParam.Comment },
-                new templateOutputField { name = "cluster", key = true, Value = fieldParam.Cluster , keySpecified = true},
-                new templateOutputField { name = "equip", Value = fieldParam.Equipment },
-                new templateOutputField { name = "addr", Value = "%MW{TagAddress}" },
-                new templateOutputField { name = "raw_zero", Value = fieldParam.RawZero },
-                new templateOutputField { name = "raw_full", Value = fieldParam.RawFull },
-                new templateOutputField { name = "eng_units", Value = fieldParam.Units },
-                new templateOutputField { name = "format", Value = fieldParam.Format },
-                new templateOutputField { name = "item", Value = CapsFirstLetter( fieldParam.Suffix.TrimStart(new char[] {',','_','.'}).ToLower()) },
-                new templateOutputField { name = "taggenlink", load = true, Value = fieldParam.TagGenLink, loadSpecified = true },
-                new templateOutputField { name = "linked", Value = "1"},
-                new templateOutputField { name = "editcode", Value = editcode },
-            };
-            templateOutput.calculator = templateOutputCalculator;
-            templateOutput.field = outputFields.ToArray();
+                var tagaddressvalue = "{equipment.BaseAddr[" + fieldParam.BaseAddressParam.ToString() + "]} + " + fieldParam.AddressOffset.ToString();
+                var templateOutputCalculator = new templateOutputCalculator { name = "TagAddress", Value = tagaddressvalue };
+                var outputFields = new List<templateOutputField>
+                {
+                    new templateOutputField { name = "name", key=true, Value =string.Format("{0}_{{equipment.tagprefix}}{1}",fieldParam.Prefix,fieldParam.Suffix) , keySpecified = true },
+                    new templateOutputField { name = "type", Value = fieldParam.DataType },
+                    new templateOutputField { name = "unit", Value = fieldParam.DeviceIO },
+                    new templateOutputField { name = "eng_zero", Value = fieldParam.EngZero },
+                    new templateOutputField { name = "eng_full", Value = fieldParam.EngFull},
+                    new templateOutputField { name = "comment", Value = "{equipment.tagprefix} " + fieldParam.Comment },
+                    new templateOutputField { name = "cluster", key = true, Value = fieldParam.Cluster , keySpecified = true},
+                    new templateOutputField { name = "equip", Value = fieldParam.Equipment },
+                    new templateOutputField { name = "addr", Value = "%MW{TagAddress}" },
+                    new templateOutputField { name = "raw_zero", Value = fieldParam.RawZero },
+                    new templateOutputField { name = "raw_full", Value = fieldParam.RawFull },
+                    new templateOutputField { name = "eng_units", Value = fieldParam.Units },
+                    new templateOutputField { name = "format", Value = fieldParam.Format },
+                    new templateOutputField { name = "item", Value = CapsFirstLetter( fieldParam.Suffix.TrimStart(new char[] {',','_','.'}).ToLower()) },
+                    new templateOutputField { name = "taggenlink", load = true, Value = fieldParam.TagGenLink, loadSpecified = true },
+                    new templateOutputField { name = "linked", Value = "1"},
+                    new templateOutputField { name = "editcode", Value = editcode },
+                };
+                templateOutput.calculator = templateOutputCalculator;
+                templateOutput.field = outputFields.ToArray();
+            }
+            else //without address calculation
+            {
+                var outputFields = new List<templateOutputField>
+                {
+                    new templateOutputField { name = "name", key=true, Value =string.Format("{0}_{{equipment.tagprefix}}{1}",fieldParam.Prefix,fieldParam.Suffix) , keySpecified = true },
+                    new templateOutputField { name = "type", Value = fieldParam.DataType },
+                    new templateOutputField { name = "unit", Value = fieldParam.DeviceIO },                    
+                    new templateOutputField { name = "comment", Value = "{equipment.tagprefix} " + fieldParam.Comment },
+                    new templateOutputField { name = "cluster", key = true, Value = fieldParam.Cluster , keySpecified = true},
+                    new templateOutputField { name = "equip", Value = fieldParam.Equipment },                                        
+                    new templateOutputField { name = "eng_units", Value = fieldParam.Units },
+                    new templateOutputField { name = "format", Value = fieldParam.Format },
+                    new templateOutputField { name = "item", Value = CapsFirstLetter( fieldParam.Suffix.TrimStart(new char[] {',','_','.'}).ToLower()) },
+                    new templateOutputField { name = "taggenlink", load = true, Value = fieldParam.TagGenLink, loadSpecified = true },
+                    new templateOutputField { name = "linked", Value = "1"},
+                    new templateOutputField { name = "editcode", Value = editcode },
+                };
+                templateOutput.field = outputFields.ToArray();
+            }
+
             return templateOutput;
         }
 
