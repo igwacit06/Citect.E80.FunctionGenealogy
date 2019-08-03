@@ -7,8 +7,15 @@ namespace Citect.E80.TagsBuilder
     {
         static void Main(string[] args)
         {
-            var dbfautomationtest = new DBFAutomation();
-            Console.WriteLine("dbf csv build complete check output folder");
+            var dbfautomation = new DBFAutomation();
+            if (dbfautomation.ExcelError)
+                Console.WriteLine("Excel read error check if excel worksheet closed?");
+            else
+            {
+                dbfautomation.ExecuteGeneration();
+
+                Console.WriteLine("dbf csv build complete check output folder");
+            }
             Console.ReadKey();
         }
     }

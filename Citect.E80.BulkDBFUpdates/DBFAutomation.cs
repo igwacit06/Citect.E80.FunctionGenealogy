@@ -12,20 +12,42 @@ using System.Text.RegularExpressions;
 
 namespace Citect.E80.BulkDBFUpdates
 {
+    public enum ToAddEnum
+    {
+        none,
+        varonly,
+        varalarm,
+        vartrend,
+        all
+    }
+
     /// <summary>
     /// function: to output excel data into csv format
     /// 
     /// </summary>
     public class DBFAutomation
     {
+        public bool ExcelError { get; set; }
+
         private readonly string[] WorkSheetNames = new string[] { "Gens", "DMC Alarms", "Load Demand", "LV&Tx CBs", "Gen Annunciator", "Gas Gens", "Mill Starting", "BOP", "Q101-8 CBs", "Tariff Meters", "Dsl Flow", "Air Compressor", "751 PRs", "700G PRs", "Gas Skid", "HMI Cmds", "Misc Analogs", "Batt Chargers", "VSDs", "Command Statuses", "Gas Flow Meters", "FIP" };
+
+        private readonly List<string> DigiAlmFields = new List<string>() { "TAG", "NAME_1", "DESC", "VAR_A", "VAR_B", "CATEGORY", "HELP", "PRIV", "AREA", "COMMENT_1", "SEQUENCE", "DELAY", "CUSTOM1", "CUSTOM2", "CUSTOM3", "CUSTOM4", "CUSTOM5", "CUSTOM6", "CUSTOM7", "CUSTOM8", "CLUSTER_1" };
+
+        private readonly List<string> TrendFields = new List<string>() { "NAME_2", "EXPR", "TRIG", "SAMPLEPER\nMANUAL", "PRIV_1", "AREA_1", "ENG_UNITS_1", "FORMAT", "FILENAME", "FILES", "TIME", "PERIOD", "COMMENT_2", "TYPE_1", "SPCFLAG", "LSL", "USL", "SUBGRPSIZE", "XDOUBLEBAR", "RANGE", "SDEVIATION", "STORMETHOD", "CLUSTER_2" };
+
+        private readonly List<string> VariableFields = new List<string>() { "NAME", "TYPE", "UNIT_2", "ADDR", "RAW_ZERO\nMANUAL", "RAW_FULL\nMANUAL", "ENG_ZERO\nMANUAL", "ENG_FULL\nMANUAL", "ENG_UNITS", "FORMAT\nMANUAL", "COMMENT", "EDITCODE", "LINKED", "OID", "REF1", "REF2", "DEADBAND", "CUSTOM", "TAGGENLINK", "CLUSTER" };
+
+        private string[] WorkSheets;
+
         private readonly List<string> TagNoAddr = new List<string>();
+        private readonly List<string> TagsNotAdded = new List<string>();
+        private readonly Dictionary<string, ToAddEnum> TagsToAdd = new Dictionary<string, ToAddEnum>();
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private DataSet DataMapDS = new DataSet();
 
         public DBFAutomation(string path = "")
         {
-            var worksheetnames =
+            WorkSheets =
                !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["WorkSheets"].ToString()) ?
                 System.Configuration.ConfigurationManager.AppSettings["WorkSheets"].Split(new char[] { ',', '|', '.' }) : WorkSheetNames;
 
@@ -33,12 +55,22 @@ namespace Citect.E80.BulkDBFUpdates
                 System.Configuration.ConfigurationManager.AppSettings["MapDataPath"] : "";
 
             OpenDataMap(path);
-            ReadVariableDataMap(worksheetnames);
-            ReadAlarmDataMap(worksheetnames);
-            ReadTrendDataMap(worksheetnames);
+            
         }
 
-        private bool OpenDataMap(string filePath)
+        public bool ExecuteGeneration()
+        {
+            ReadVariableDataMap();
+            //ReadAlarmDataMap();
+            //ReadTrendDataMap();
+            return true;
+        }
+
+        /// <summary>
+        /// open excel sheet
+        /// </summary>
+        /// <param name="filePath"></param>
+        private void OpenDataMap(string filePath)
         {
             var configuredatatable = new ExcelDataTableConfiguration { UseHeaderRow = true, ReadHeaderRow = rowreader => rowreader.Read() };
             try
@@ -55,24 +87,36 @@ namespace Citect.E80.BulkDBFUpdates
             catch (Exception ex)
             {
                 log.Error("ReadDataMap", ex);
+                ExcelError = true;
             }
-            return false;
+            ExcelError = false;
         }
 
-        //get all variable,digital,trend data from each table
-        private void ReadTrendDataMap(string[] worksheets)
+        /// <summary>
+        /// deprecated
+        /// </summary>
+        private void ReadTrendDataMap()
         {
-            var TrendFields = new List<string>() { "NAME_2", "EXPR", "TRIG", "SAMPLEPER\nMANUAL", "PRIV_1", "AREA_1", "ENG_UNITS_1", "FORMAT", "FILENAME", "FILES", "TIME", "PERIOD", "COMMENT_2", "TYPE", "SPCFLAG", "LSL", "USL", "SUBGRPSIZE", "XDOUBLEBAR", "RANGE", "SDEVIATION", "STORMETHOD", "CLUSTER_2" };
-
+            
             var DataMap = new Dictionary<string, List<string>>();
             foreach (DataTable dt in DataMapDS.Tables)
             {
-                if (!worksheets.Contains(dt.TableName)) continue;
+                if (!WorkSheets.Contains(dt.TableName)) continue;
 
                 var rowLines = new List<string>();
-                foreach (DataRow row in dt.AsEnumerable()) //row 1 is title, row 2 are fieldName in data map sheet
-                {                   
-                    if (row.IsNull("CLUSTER_2")) continue;
+                foreach (DataRow row in dt.Rows) //row 1 is title, row 2 are fieldName in data map sheet
+                {
+                    //bypass tags not needed 
+                    //var toAdd = (ToAddEnum)Enum.Parse(typeof(ToAddEnum), !row.IsNull("ToAdd") ? row["ToAdd"].ToString() : "0");
+                    //if (toAdd == ToAddEnum.none || toAdd == ToAddEnum.varonly) continue;
+
+                    if (row.IsNull("EXPR") || int.TryParse(row["EXPR"].ToString(), out int result)) continue;
+                    
+                    if (TagsToAdd.ContainsKey(row["EXPR"].ToString()))
+                    {
+                        var toadd = TagsToAdd[row["EXPR"].ToString()];
+                        if (toadd == ToAddEnum.none || toadd == ToAddEnum.varonly || toadd == ToAddEnum.varalarm) continue;
+                    }
 
                     string rowline = string.Empty;
                     bool addToMap = false;
@@ -81,12 +125,14 @@ namespace Citect.E80.BulkDBFUpdates
                         if (fieldName.Equals("EXPR"))
                             addToMap = TagNoAddr.Contains(row["EXPR"].ToString()) ? false : true;
 
+
                         if (dt.Columns.Contains(fieldName))
                             rowline += row.IsNull(fieldName) ? "," : Regex.Replace(row[fieldName].ToString(), ",", "") + ",";
                         else
                             rowline += ",";
                     }
                     if (addToMap)
+
                         rowLines.Add(rowline);
                 }
 
@@ -97,22 +143,28 @@ namespace Citect.E80.BulkDBFUpdates
 
         }
 
-        //get all variable,digital,trend data from each table
-        private void ReadAlarmDataMap(string[] worksheets)
-        {
-            var DigiAlmFields = new List<string>() { "TAG", "NAME_1", "DESC", "VAR_A", "VAR_B", "CATEGORY", "HELP", "PRIV", "AREA", "COMMENT_1", "SEQUENCE", "DELAY", "CUSTOM1", "CUSTOM2", "CUSTOM3", "CUSTOM4", "CUSTOM5", "CUSTOM6", "CUSTOM7", "CUSTOM8", "CLUSTER_1" };
-
+        /// <summary>
+        /// deprecated
+        /// </summary>
+        private void ReadAlarmDataMap()
+        {            
             var DataMap = new Dictionary<string, List<string>>();
             foreach (DataTable dt in DataMapDS.Tables)
             {
-                if (!worksheets.Contains(dt.TableName)) continue;
+                if (!WorkSheets.Contains(dt.TableName)) continue;
 
                 var rowLines = new List<string>();
-                foreach (DataRow row in dt.AsEnumerable()) //row 1 is title, row 2 are fieldName in data map sheet
+                foreach (DataRow row in dt.Rows) //row 1 is title, row 2 are fieldName in data map sheet
                 {
-                    if (row.IsNull("TAG") || int.TryParse(row["TAG"].ToString(), out int result)) continue;
-                    if (row.IsNull("CLUSTER_1")) continue;
-
+            
+                    if (row.IsNull("VAR_A") || int.TryParse(row["VAR_A"].ToString(), out int result)) continue;
+                    
+                    if(TagsToAdd.ContainsKey(row["VAR_A"].ToString()))
+                    {
+                        var toadd = TagsToAdd[row["VAR_A"].ToString()];
+                        if (toadd == ToAddEnum.none || toadd == ToAddEnum.varonly || toadd == ToAddEnum.vartrend) continue;
+                    }
+                   
                     string rowline = string.Empty;
                     bool addToMap = false;
                     foreach (var fieldName in DigiAlmFields)
@@ -137,25 +189,35 @@ namespace Citect.E80.BulkDBFUpdates
 
         }
 
-        //get all variable,digital,trend data from each table
-        private void ReadVariableDataMap(string[] worksheets)
+        /// <summary>
+        /// read map from excel tabs and process variables/alarms/trend
+        /// </summary>
+        private void ReadVariableDataMap()
         {
-            var VariableFields = new List<string>() { "NAME", "TYPE", "UNIT_2", "ADDR", "RAW_ZERO\nMANUAL", "RAW_FULL\nMANUAL", "ENG_ZERO\nMANUAL", "ENG_FULL\nMANUAL", "ENG_UNITS", "FORMAT\nMANUAL", "COMMENT", "EDITCODE", "LINKED", "OID", "REF1", "REF2", "DEADBAND", "CUSTOM", "TAGGENLINK", "CLUSTER" };
+           
+            var variableDataMap = new Dictionary<string, List<string>>();
+            var trendDataMap = new Dictionary<string, List<string>>();
+            var alarmDataMap = new Dictionary<string, List<string>>();
 
-            var DataMap = new Dictionary<string, List<string>>();
             foreach (DataTable dt in DataMapDS.Tables)
             {
                 try
                 {
+                    //worksheet not required
+                    if (!WorkSheets.Contains(dt.TableName)) continue;
+                    var variableLines = new List<string>();
+                    var alarmLines = new List<string>();
+                    var trendLines = new List<string>();
 
-                    if (!worksheets.Contains(dt.TableName)) continue;
-
-                    var rowLines = new List<string>();
-                    foreach (DataRow row in dt.AsEnumerable()) //row 1 is title, row 2 are fieldName in data map sheet
+                    foreach (DataRow row in dt.Rows) //row 1 is title, row 2 are fieldName in data map sheet
                     {
-                        if (row.IsNull("NAME") || int.TryParse(row["NAME"].ToString(), out int result)) continue;
-                        if (row.IsNull("CLUSTER")) continue;
+                        //bypass tags not needed 
+                        var toAdd = (ToAddEnum)Enum.Parse(typeof(ToAddEnum), !row.IsNull("ToAdd") ? row["ToAdd"].ToString() : "0");
+                        if (toAdd == ToAddEnum.none) continue;
 
+                        if (row.IsNull("NAME") || int.TryParse(row["NAME"].ToString(), out int result)) continue;
+                        var tagname = row["NAME"].ToString();
+                        
                         string rowline = string.Empty;
                         bool noaddr = false;
                         foreach (var fieldName in VariableFields)
@@ -167,32 +229,60 @@ namespace Citect.E80.BulkDBFUpdates
                                     noaddr = row.IsNull(fieldName) ? true : false;
                                     if (noaddr)
                                         TagNoAddr.Add(row["NAME"].ToString());
-
                                 }
 
                                 //noaddr = dt.Columns.Equals("ADDR") && row.IsNull(fieldName) ? true : false;
                                 rowline += row.IsNull(fieldName) ? "," : Regex.Replace(row[fieldName].ToString(), ",", "") + ",";
-
                             }
                             else
                                 rowline += ",";
                         }
                         if (noaddr) continue;
 
-                        rowLines.Add(rowline);
-                    }
+                        //check for duplicates
+                        if (!TagsToAdd.ContainsKey(tagname))
+                            TagsToAdd.Add(tagname, toAdd);
+                        else
+                        {
+                            log.WarnFormat("possible duplicate check tag {0} in tab {1}", tagname, dt.TableName);
+                            continue;
+                        }
 
-                    DataMap.Add(dt.TableName, rowLines);
+                        variableLines.Add(rowline);
+
+                        //alarms
+                        if (toAdd == ToAddEnum.varalarm || toAdd == ToAddEnum.all)
+                        {
+                            rowline = string.Empty;
+                            DigiAlmFields.ForEach(s => rowline += row.IsNull(s) ? "," : Regex.Replace(row[s].ToString(), ",", "") + ",");
+                            if (!string.IsNullOrEmpty(rowline))
+                                alarmLines.Add(rowline.TrimEnd(new char[] {','}));                            
+                        }
+
+                        //trends
+                        if (toAdd == ToAddEnum.vartrend || toAdd == ToAddEnum.all)
+                        {
+                            rowline = string.Empty;
+                            TrendFields.ForEach(s => rowline += row.IsNull(s) ? "," : Regex.Replace(row[s].ToString(), ",", "") + ",");                            
+                            if (!string.IsNullOrEmpty(rowline))
+                                trendLines.Add(rowline.TrimEnd(new char[] { ',' }));
+                        }
+                    }
                     TagNoAddr.ForEach(s => log.DebugFormat("Tags Missing Address: {0}", s));
+
+                    variableDataMap.Add(dt.TableName, variableLines);
+                    alarmDataMap.Add(dt.TableName, alarmLines);
+                    trendDataMap.Add(dt.TableName, trendLines);
                 }
                 catch (Exception ex)
                 {
                     log.Error("ReadVariableDataMap:", ex);
                 }
-
             }
 
-            OutputToCSV("VariableCsv", VariableFields, DataMap);
+            OutputToCSV("VariableCsv", VariableFields, variableDataMap);
+            OutputToCSV("DigiAlmcsv", DigiAlmFields, alarmDataMap);
+            OutputToCSV("Trendcsv", TrendFields, trendDataMap);
         }
 
 
@@ -206,13 +296,23 @@ namespace Citect.E80.BulkDBFUpdates
             var newFieldList = dbfFields.Select(s => Regex.Replace(s, "\n|\t|\r", "")).ToList();
 
             csv.WriteToFile("{0}", string.Join(",", newFieldList));
-            
+
             foreach (var kvp in DataMap)
             {
-                log.DebugFormat("writing {0} tags for {1} with {2} tags", dbfType, kvp.Key, kvp.Value.Count);                
+                log.DebugFormat("writing {0} tags for {1} with {2} tags", dbfType, kvp.Key, kvp.Value.Count);
                 kvp.Value.ForEach(s => csv.WriteToFile("{0}", s));
             }
             csv.CloseFile();
         }
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DBFDiagnostics
+    {
+        public string TabName { get; set; }
+        public List<string> NoAddress { get; set; }
+        public List<string> NotAdded { get; set; }
     }
 }
