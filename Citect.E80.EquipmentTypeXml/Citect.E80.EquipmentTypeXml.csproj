@@ -61,5 +61,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Citect.E80.FunctionGenealogy\Citect.E80.FunctionGenealogy.csproj">
+      <Project>{3008f6d0-fd9a-4b8c-bd76-03e0eaee2a06}</Project>
+      <Name>Citect.E80.FunctionGenealogy</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

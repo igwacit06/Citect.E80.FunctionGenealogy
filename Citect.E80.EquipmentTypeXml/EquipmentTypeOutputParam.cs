@@ -4,10 +4,11 @@ namespace Citect.E80.EquipmentTypeXml
 {
     public enum BaseAddr
     {
-        Invalid,
+        Others,
         Status,
         Analog,
-        Alarm
+        Alarm,
+        Totalisers
     }
 
     /// <summary>

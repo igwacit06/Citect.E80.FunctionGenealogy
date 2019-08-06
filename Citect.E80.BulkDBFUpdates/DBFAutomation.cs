@@ -38,7 +38,8 @@ namespace Citect.E80.BulkDBFUpdates
         private readonly List<string> VariableFields = new List<string>() { "NAME", "TYPE", "UNIT_2", "ADDR", "RAW_ZERO\nMANUAL", "RAW_FULL\nMANUAL", "ENG_ZERO\nMANUAL", "ENG_FULL\nMANUAL", "ENG_UNITS", "FORMAT\nMANUAL", "COMMENT", "EDITCODE", "LINKED", "OID", "REF1", "REF2", "DEADBAND", "CUSTOM", "TAGGENLINK", "CLUSTER" };
 
         private string[] WorkSheets;
-
+        private bool Validate;
+        private readonly List<DataTable> CitectConfigDBF = new List<DataTable>();
         private readonly List<string> TagNoAddr = new List<string>();
         private readonly List<string> TagsNotAdded = new List<string>();
         private readonly Dictionary<string, ToAddEnum> TagsToAdd = new Dictionary<string, ToAddEnum>();
@@ -54,7 +55,10 @@ namespace Citect.E80.BulkDBFUpdates
             path = !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["MapDataPath"].ToString()) ?
                 System.Configuration.ConfigurationManager.AppSettings["MapDataPath"] : "";
 
+            Validate = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["DiagnosticsRequired"]);
+
             OpenDataMap(path);
+            
             
         }
 
@@ -90,6 +94,16 @@ namespace Citect.E80.BulkDBFUpdates
                 ExcelError = true;
             }
             ExcelError = false;
+        }
+
+        /// <summary>
+        /// open dbf variable,trend,digalarm
+        /// </summary>
+        private void OpenCurrentDBFConfiguration(string pathname)
+        { 
+            var dbfs = new List<string> { "Variable", "Digalm", "Trend" };
+            dbfs.ForEach(s => CitectConfigDBF.Add(ReadDbf.GetTable(pathname, s)));
+           
         }
 
         /// <summary>
@@ -281,13 +295,98 @@ namespace Citect.E80.BulkDBFUpdates
             }
 
             OutputToCSV("VariableCsv", VariableFields, variableDataMap);
-            OutputToCSV("DigiAlmcsv", DigiAlmFields, alarmDataMap);
-            OutputToCSV("Trendcsv", TrendFields, trendDataMap);
+            OutputToCSV("DigAlmCsv", DigiAlmFields, alarmDataMap);
+            OutputToCSV("TrendCsv", TrendFields, trendDataMap);
+
+            if (Validate)
+            {
+                ProcessValidation("Variable", variableDataMap);
+                ProcessValidation("Digalm", alarmDataMap);
+                ProcessValidation("Trend", trendDataMap);
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbfTable"></param>
+        /// <param name="csvRowLines"></param>
+        /// <returns></returns>
+        public bool ProcessValidation(string dbfTable, Dictionary<string,List<string>> csvRowLines)
+        {
+            var something = CitectConfigDBF.FirstOrDefault(s => s.TableName == dbfTable);
+            if (something == null)
+                return false;
 
-        //gets all variable data and push to csv
-        public void OutputToCSV(string dbfType, List<string> dbfFields, Dictionary<string, List<string>> DataMap)
+            var tagDiagnostics = new List<DBFTagDiagnostics>();
+
+            foreach (DataRow row in something.Rows)
+            {
+                if (row.IsNull(0)) continue;
+
+                foreach (var csvLineDetail in csvRowLines)
+                {
+                    try
+                    {
+                        var result = csvLineDetail.Value.FirstOrDefault(s => s.Contains(row[0].ToString()));
+                        if (result == null)
+                        {
+                            log.DebugFormat("{0} unable to locate tag in new setup {1}", dbfTable, row[0].ToString());
+                            continue;
+                        }
+
+                        //split the kvp value
+                        var details = result.Split(new char[] { ',' });
+                        var unmatched = new Dictionary<string, string>();
+                        for (int colIdx = 0; colIdx < something.Columns.Count; colIdx++)
+                        {
+                            if (row[colIdx].ToString() == details[colIdx])
+                                continue;
+
+                            unmatched.Add(something.Columns[colIdx].ColumnName, string.Format("old val: {0}-new val:{1}", row[colIdx].ToString(), details[colIdx]));
+                            //add to dbf field difference list
+
+                        }
+                        tagDiagnostics.Add(new DBFTagDiagnostics { TabName = csvLineDetail.Key, TagName = row[0].ToString(), UnMatchedField = unmatched });
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Error("ProcessValidation", ex);
+                    }
+                }
+            }
+
+            OutputToDiagnosticCSV(dbfTable, tagDiagnostics);
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbfType"></param>
+        /// <param name="dBFTagDiagnostics"></param>
+        private void OutputToDiagnosticCSV(string dbfType, IList<DBFTagDiagnostics> dBFTagDiagnostics)
+        {
+            var outputpath = System.Configuration.ConfigurationManager.AppSettings["OutputPath"];
+            var path = outputpath + dbfType + "Diagnostics.csv";
+            var csv = new LogCsv(path, true);
+
+            foreach (var tagdiagnostic in dBFTagDiagnostics)
+            {
+                foreach (var kvp in tagdiagnostic.UnMatchedField)
+                    csv.WriteToFile("tab:{0},tagname{1},fieldName{2},value{3}", tagdiagnostic.TabName, tagdiagnostic.TagName, kvp.Value);
+            }
+            csv.CloseFile();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbfType"></param>
+        /// <param name="dbfFields"></param>
+        /// <param name="DataMap"></param>
+        private void OutputToCSV(string dbfType, List<string> dbfFields, Dictionary<string, List<string>> DataMap)
         {
             var outputpath = System.Configuration.ConfigurationManager.AppSettings["OutputPath"];
             var path = outputpath + dbfType + ".csv";
@@ -309,10 +408,10 @@ namespace Citect.E80.BulkDBFUpdates
     /// <summary>
     /// 
     /// </summary>
-    public class DBFDiagnostics
+    public class DBFTagDiagnostics
     {
         public string TabName { get; set; }
-        public List<string> NoAddress { get; set; }
-        public List<string> NotAdded { get; set; }
+        public string TagName { get; set; }
+        public Dictionary<string, string> UnMatchedField { get; set; }
     }
 }

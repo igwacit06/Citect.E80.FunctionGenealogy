@@ -95,13 +95,13 @@ namespace Citect.E80.EquipmentTypeXml
                 var templateOutputs = new List<templateOutput>();
                 //get baseaddress?
                 var baseAddressList = new Dictionary<string, int>();
-                foreach (DataRow row in dtTable.AsEnumerable().Take(3))
+                foreach (DataRow row in dtTable.AsEnumerable().Take(4))
                     baseAddressList.Add(row["Tag Name"].ToString(), int.Parse(row["Address"].ToString()));
 
                 //put the information into class
                 var outputparams = new List<EquipmentTypeOutputParam>();
                 string equipment = "";
-                foreach (DataRow row in dtTable.AsEnumerable().Skip(3))
+                foreach (DataRow row in dtTable.AsEnumerable().Skip(4))
                 {
                     //inner exception
                     if (row.IsNull("Tag Name")) continue;
@@ -120,7 +120,7 @@ namespace Citect.E80.EquipmentTypeXml
                             Suffix = tagName.Substring(tagName.IndexOf(equipment) + equipment.Length).TrimStart(new char[] { '_', '.', ',', '|' }),  //suffix is anything after equipment name string
                             Prefix = nameSplit[0],
                             BaseAddrPairs = baseAddressList,
-                            BaseAddressParam = GetBaseAddrParam(nameSplit[0]),
+                            BaseAddressParam = GetBaseAddrParam(!row.IsNull("Tag Type") ? row["Tag Type"].ToString() : ""),
                             TagAddress = plcNumericAddress,
                             AlmCategory = row.IsNull("Category") ? "" : row["Category"].ToString(),
                             RawZero = row.IsNull("Raw Zero Scale") ? "0" : row["Raw Zero Scale"].ToString(),
@@ -174,22 +174,25 @@ namespace Citect.E80.EquipmentTypeXml
             return EquipmentTypeTemplates.Count > 0;
         }
 
-        private BaseAddr GetBaseAddrParam(string prefix)
+        private BaseAddr GetBaseAddrParam(string TagType)
         {
             BaseAddr baseAddr;
-            switch (prefix)
+            switch (TagType)
             {
-                case "S":
+                case "Status":
                     baseAddr = BaseAddr.Status;
                     break;
-                case "A":
+                case "Alarms":
                     baseAddr = BaseAddr.Alarm;
                     break;
-                case "N":
+                case "Analogs":
                     baseAddr = BaseAddr.Analog;
                     break;
+                case "Totalisers":
+                    baseAddr = BaseAddr.Totalisers;
+                    break;          
                 default:
-                    baseAddr = BaseAddr.Invalid;
+                    baseAddr = BaseAddr.Others;
                     break;
             }
             return baseAddr;
