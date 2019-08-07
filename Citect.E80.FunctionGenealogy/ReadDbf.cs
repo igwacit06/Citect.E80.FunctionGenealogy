@@ -50,7 +50,7 @@ namespace Citect.E80.FunctionGenealogy
         /// <returns></returns>
         public static DataTable GetTable(string pathname, string table)
         {
-            var resultSet = new DataTable();
+            var resultSet = new DataTable { TableName = table };
             try
             {
                 using (var connectionHandler =
@@ -65,6 +65,7 @@ namespace Citect.E80.FunctionGenealogy
                     var da = new OleDbDataAdapter(query);
 
                     da.Fill(resultSet);
+                    
                 }
             }
             catch (Exception ex)
