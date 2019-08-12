@@ -76,8 +76,7 @@ namespace Citect.E80.EquipmentTypeXml
             if (BaseAddressParam == BaseAddr.Alarm)
             {
                 AddressOffset = TagAddress - BaseAddrPairs[BaseAddr.Alarm.ToString()];
-                templateOutputs.Add(
-                TomPriceEquipmentTemplate.GetEquipmentType_VarDiscreteOutputs(this));
+                templateOutputs.Add(TomPriceEquipmentTemplate.GetEquipmentType_VarDiscreteOutputs(this));
                 templateOutputs.Add(TomPriceEquipmentTemplate.GetEquipmentType_DigAlmOutputs(this));
             }
 
@@ -89,6 +88,13 @@ namespace Citect.E80.EquipmentTypeXml
 
                 if (SetTrends)
                     templateOutputs.Add(TomPriceEquipmentTemplate.GetEquipmentType_TrnOutputs(this));
+            }
+
+            //create totalisers
+            if (BaseAddressParam.Equals(BaseAddr.Totalisers))
+            {
+                AddressOffset = TagAddress - BaseAddrPairs[BaseAddr.Totalisers.ToString()];
+                templateOutputs.Add(TomPriceEquipmentTemplate.GetEquipmentType_VarAnalogOutputs(this));                
             }
 
             //create calculated variable (if specified)
