@@ -42,7 +42,7 @@ namespace Citect.E80.FunctionGenealogy
             try
             {
                 StreamWriter = File.AppendText(Csvfilepath);
-                StreamWriter.AutoFlush = true;				
+                StreamWriter.AutoFlush = true;			                
                 Opened = true;
 				Log = enableLog;
             }

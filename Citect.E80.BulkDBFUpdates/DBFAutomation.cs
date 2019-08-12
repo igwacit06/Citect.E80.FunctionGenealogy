@@ -329,61 +329,59 @@ namespace Citect.E80.BulkDBFUpdates
                 return false;
 
             var tagDiagnostics = new List<DBFTagDiagnostics>();
-
+            
             foreach (DataRow row in resultdt.Rows)
-            {
+            {          
                 if (row.IsNull(0)) continue;
 
                 var dbftag = row[0].ToString().Trim();
-                bool found = false;
-                foreach (var csvLineDetail in csvRowLines)
-                {   
-                    try
-                    {
-                        var result = csvLineDetail.Value.FirstOrDefault(s => s.Split(new char[] { ',' })[0] == dbftag);
-                        if (result == null)
-                        {
-                            //log.DebugFormat("tab:{0} tag not found:{1}", dbfTable, dbftag);
-                            found = false;
-                            continue;
-                        }
-                        //split the kvp value
-                        var details = result.Split(new char[] { ',' });
-                        var unmatchedlist = new Dictionary<string, string>();
-                        found = true;
-                        for (int colIdx = 0; colIdx < details.Length; colIdx++)
-                        {
-                            //ignore oid
-                            if (resultdt.Columns[colIdx].ColumnName.Equals("oid")) continue;
+                string csvrowline = "";
+                string tabName = "";
 
-                            if (row.IsNull(colIdx))
-                            {
-                                //col is null but result is not?
-                                if (string.IsNullOrEmpty(details[colIdx]))
-                                    continue;
-                                else
-                                {
-                                    unmatchedlist.Add(resultdt.Columns[colIdx].ColumnName, string.Format("empty,{0}", details[colIdx]));
-                                    continue;
-                                }
-                            }
+                foreach(var excelmaptab in csvRowLines)
+                {
+                    if (!excelmaptab.Value.Exists(s => s.Split(new char[] { ',' })[0] == dbftag))
+                        continue;
 
-                            if (row[colIdx].ToString().Trim().Equals(details[colIdx].Trim()))
-                                continue;
-
-                            //add to dbf field difference list                            
-                            unmatchedlist.Add(resultdt.Columns[colIdx].ColumnName, string.Format("{0},{1}", string.IsNullOrEmpty(row[colIdx].ToString()) ? "empty" : row[colIdx].ToString().Trim(), details[colIdx]));
-                        }
-                        if (unmatchedlist.Count > 0)
-                            tagDiagnostics.Add(new DBFTagDiagnostics { TabName = csvLineDetail.Key, TagName = dbftag, UnMatchedField = unmatchedlist });
-                    }
-                    catch (Exception ex)
-                    {
-                        log.Error("ProcessValidation", ex);
-                    }
+                    tabName = excelmaptab.Key;
+                    csvrowline = excelmaptab.Value.FirstOrDefault(s => s.Split(new char[] { ',' })[0] == dbftag);
                 }
-                if (!found)
-                    tagDiagnostics.Add(new DBFTagDiagnostics { TabName = "None", TagName = dbftag, UnMatchedField = new Dictionary<string, string>() });
+
+                if (!string.IsNullOrEmpty(csvrowline))
+                {
+                    var linedetails = csvrowline.Split(new char[] { ',' });
+                    var unmatchedlist = new Dictionary<string, string>();
+                    //check csv line against each dbf cell
+                    for (int colIdx = 0; colIdx < linedetails.Length; colIdx++)
+                    {
+                        //ignore oid
+                        if (resultdt.Columns[colIdx].ColumnName.Equals("oid")) continue;
+
+                        if (row.IsNull(colIdx))
+                        {
+                            //col is null but result is not?
+                            if (string.IsNullOrEmpty(linedetails[colIdx]))
+                                continue;
+                            else
+                            {
+                                unmatchedlist.Add(resultdt.Columns[colIdx].ColumnName, string.Format("empty,{0}", linedetails[colIdx]));
+                                continue;
+                            }
+                        }
+
+                        if (row[colIdx].ToString().Trim().Equals(linedetails[colIdx].Trim()))
+                            continue;
+
+                        //add to dbf field difference list                            
+                        unmatchedlist.Add(resultdt.Columns[colIdx].ColumnName, string.Format("{0},{1}", string.IsNullOrEmpty(row[colIdx].ToString()) ? "empty" : row[colIdx].ToString().Trim(), linedetails[colIdx]));
+                    }
+                    if (unmatchedlist.Count > 0)
+                        tagDiagnostics.Add(new DBFTagDiagnostics { ExcelTabName = tabName, TagName = dbftag, UnMatchedField = unmatchedlist });
+                }
+                else
+                {
+                    tagDiagnostics.Add(new DBFTagDiagnostics { ExcelTabName = "None", TagName = dbftag, UnMatchedField = new Dictionary<string, string>() });
+                }               
             }
 
             OutputToDiagnosticCSV(dbfTable, tagDiagnostics);
@@ -405,10 +403,13 @@ namespace Citect.E80.BulkDBFUpdates
             csv.WriteToFile("tab,tagname,fieldname,old value,new value");
             foreach (var tagdiagnostic in dBFTagDiagnostics)
             {
-                if (!tagdiagnostic.UnMatchedField.Any()) continue;
-
+                if (!tagdiagnostic.UnMatchedField.Any())
+                {
+                    csv.WriteToFile("{0},{1},,", tagdiagnostic.ExcelTabName, tagdiagnostic.TagName);
+                    continue;
+                }
                 foreach (var fieldDiag in tagdiagnostic.UnMatchedField)
-                    csv.WriteToFile("{0},{1},{2},{3}", tagdiagnostic.TabName, tagdiagnostic.TagName, fieldDiag.Key, fieldDiag.Value);
+                    csv.WriteToFile("{0},{1},{2},{3}", tagdiagnostic.ExcelTabName, tagdiagnostic.TagName, fieldDiag.Key, fieldDiag.Value);
             }
             csv.CloseFile();
         }
@@ -443,7 +444,7 @@ namespace Citect.E80.BulkDBFUpdates
     /// </summary>
     public class DBFTagDiagnostics
     {
-        public string TabName { get; set; }
+        public string ExcelTabName { get; set; }
         public string TagName { get; set; }
         public Dictionary<string, string> UnMatchedField { get; set; }
     }
