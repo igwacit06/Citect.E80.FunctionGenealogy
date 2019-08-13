@@ -89,6 +89,11 @@ namespace Citect.E80.EquipmentTypeXml
         {
             foreach (DataTable dtTable in ds.Tables)
             {
+
+                //DEBUG
+                if (dtTable.TableName.Contains("Chlo"))
+                    log.Debug("stop");
+
                 var equipmentTypeTemplate = new template { desc = dtTable.TableName }; //name of worksheet - equipment type name
                 equipmentTypeTemplate.param = TomPriceEquipmentTemplate.GetEquipmentType_Param(dtTable.TableName, "");
                 equipmentTypeTemplate.input = TomPriceEquipmentTemplate.GetEquipmentType_Input();
@@ -105,7 +110,7 @@ namespace Citect.E80.EquipmentTypeXml
                 {
                     //inner exception
                     if (row.IsNull("Tag Name")) continue;
-                    string tagName = row["Tag Name"].ToString();
+                    string tagName = row["Tag Name"].ToString().Replace('.', '_');
                     equipment = row.IsNull("Equipment") ? equipment : row["Equipment"].ToString();
                     var nameSplit = tagName.Split(new char[] { '_', '.' });
 
@@ -120,7 +125,7 @@ namespace Citect.E80.EquipmentTypeXml
                             Suffix = tagName.Substring(tagName.IndexOf(equipment) + equipment.Length).TrimStart(new char[] { '_', '.', ',', '|' }),  //suffix is anything after equipment name string
                             Prefix = nameSplit[0],
                             BaseAddrPairs = baseAddressList,
-                            BaseAddressParam = GetBaseAddrParam(!row.IsNull("Tag Type") ? row["Tag Type"].ToString() : ""),
+                            BaseAddressParam = !row.IsNull("Tag Type") ? (BaseAddr)Enum.Parse(typeof(BaseAddr),row["Tag Type"].ToString()):BaseAddr.Others,
                             TagAddress = plcNumericAddress,
                             AlmCategory = row.IsNull("Category") ? "" : row["Category"].ToString(),
                             RawZero = row.IsNull("Raw Zero Scale") ? "0" : row["Raw Zero Scale"].ToString(),

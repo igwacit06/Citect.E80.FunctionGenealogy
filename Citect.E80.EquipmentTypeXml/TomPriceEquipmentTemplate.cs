@@ -238,7 +238,7 @@ namespace Citect.E80.EquipmentTypeXml
             {
                 new templateParamString{ name = "name",  Value = name},
                 new templateParamString{ name = "ref",  Value = ""},
-                new templateParamString{name="parameter-definitions", Value = "BaseAddr.Status=;BaseAddr.Alarm=;BaseAddr.Analog=;Command.AUTO=;"}
+                new templateParamString{name="parameter-definitions", Value = "BaseAddr.Status=;BaseAddr.Alarm=;BaseAddr.Analog=;BaseAddr.Totalisers=;Command.AUTO=;"}
             };
             equipmentTypeParam.@string = paramstring.ToArray();
             return equipmentTypeParam;
