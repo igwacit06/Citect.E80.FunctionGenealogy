@@ -125,7 +125,7 @@ namespace Citect.E80.EquipmentTypeXml
                             Suffix = tagName.Substring(tagName.IndexOf(equipment) + equipment.Length).TrimStart(new char[] { '_', '.', ',', '|' }),  //suffix is anything after equipment name string
                             Prefix = nameSplit[0],
                             BaseAddrPairs = baseAddressList,
-                            BaseAddressParam = !row.IsNull("Tag Type") ? (BaseAddr)Enum.Parse(typeof(BaseAddr),row["Tag Type"].ToString()):BaseAddr.Others,
+                            BaseAddressParam = !row.IsNull("Tag Type") ? (BaseAddr)Enum.Parse(typeof(BaseAddr),row["Tag Type"].ToString()):BaseAddr.None,
                             TagAddress = plcNumericAddress,
                             AlmCategory = row.IsNull("Category") ? "" : row["Category"].ToString(),
                             RawZero = row.IsNull("Raw Zero Scale") ? "0" : row["Raw Zero Scale"].ToString(),
@@ -147,7 +147,7 @@ namespace Citect.E80.EquipmentTypeXml
                             }
                             else
                             {
-                                outputparam.DeviceIO = row["I/O Device"].ToString();
+                                outputparam.DeviceIO = row["I/O Device"].ToString();                                
                             }
                         }                        
 
@@ -178,31 +178,7 @@ namespace Citect.E80.EquipmentTypeXml
 
             return EquipmentTypeTemplates.Count > 0;
         }
-
-        private BaseAddr GetBaseAddrParam(string TagType)
-        {
-            BaseAddr baseAddr;
-            switch (TagType)
-            {
-                case "Status":
-                    baseAddr = BaseAddr.Status;
-                    break;
-                case "Alarms":
-                    baseAddr = BaseAddr.Alarm;
-                    break;
-                case "Analogs":
-                    baseAddr = BaseAddr.Analog;
-                    break;
-                case "Totalisers":
-                    baseAddr = BaseAddr.Totalisers;
-                    break;          
-                default:
-                    baseAddr = BaseAddr.Others;
-                    break;
-            }
-            return baseAddr;
-        }
-
+        
         /// <summary>
         /// Serialise to XML.
         /// </summary>

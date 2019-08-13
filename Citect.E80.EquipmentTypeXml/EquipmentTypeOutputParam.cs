@@ -4,7 +4,7 @@ namespace Citect.E80.EquipmentTypeXml
 {
     public enum BaseAddr
     {
-        Others,
+        None,
         Status,
         Analog,
         Alarm,
@@ -83,6 +83,7 @@ namespace Citect.E80.EquipmentTypeXml
             //create tag and trend tag (if required)
             if (BaseAddressParam.Equals(BaseAddr.Analog))
             {
+                
                 AddressOffset = TagAddress - BaseAddrPairs[BaseAddr.Analog.ToString()];
                 templateOutputs.Add(TomPriceEquipmentTemplate.GetEquipmentType_VarAnalogOutputs(this));
 

@@ -114,7 +114,7 @@ namespace Citect.E80.EquipmentTypeXml
         {
             templateOutput templateOutput = new templateOutput { name = "Var." + fieldParam.Suffix.TrimStart(new char[] { ',', '_', '.' }), file = "variable.dbf", filter = @"'{equipment.type}={type.name}'" };
 
-            if (fieldParam.DeviceIO.Contains("IODEVICE"))
+            if (fieldParam.DeviceIO.Contains("IODEVICE") && fieldParam.AddressOffset >= 0)
             {
                 var tagaddressvalue = "{equipment.BaseAddr[" + fieldParam.BaseAddressParam.ToString() + "]} + " + fieldParam.AddressOffset.ToString();
                 var templateOutputCalculator = new templateOutputCalculator { name = "TagAddress", Value = tagaddressvalue };
