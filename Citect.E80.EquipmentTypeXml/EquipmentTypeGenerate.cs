@@ -28,6 +28,8 @@ namespace Citect.E80.EquipmentTypeXml
 
         private List<DataSet> CitectTagsDataSet;
         private readonly List<template> EquipmentTypeTemplates;
+        private readonly string outputpath = System.Configuration.ConfigurationManager.AppSettings["EquipOutput"].ToString();
+        private readonly string inputpath = System.Configuration.ConfigurationManager.AppSettings["EqTypePath"].ToString();
         //read from excel
         //convert to xml equipment type?
         //special cases?
@@ -42,9 +44,8 @@ namespace Citect.E80.EquipmentTypeXml
         /// get excel template from specified directory
         /// </summary>
         private void GetExcelTemplateFromDirectory()
-        {
-            var path = System.Configuration.ConfigurationManager.AppSettings["EqTypePath"];
-            var directoryInfo = new DirectoryInfo(path);
+        {            
+            var directoryInfo = new DirectoryInfo(inputpath);
             foreach (var fileinfo in directoryInfo.GetFiles())
                 GetCitectTagsFromExcel(fileinfo.FullName);
         }
@@ -191,7 +192,7 @@ namespace Citect.E80.EquipmentTypeXml
             if (template == null) return false;
 
             XmlSerializer xs = new XmlSerializer(typeof(template));
-            using (var txtwriter = new StreamWriter(@"C:\CodeTest\EquipmentTypes\Output\" + equipmenttype + ".xml", false, Encoding.UTF8))
+            using (var txtwriter = new StreamWriter(outputpath + "\\" + equipmenttype + ".xml", false, Encoding.UTF8))
             {
                 xs.Serialize(txtwriter, template, ns);
             }
