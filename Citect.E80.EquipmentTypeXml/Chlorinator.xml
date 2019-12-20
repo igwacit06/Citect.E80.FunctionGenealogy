@@ -1,0 +1,328 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<template desc="Chlorinator">
+  <param name="type">
+    <string name="name">Chlorinator</string>
+    <string name="ref" />
+    <string name="parameter-definitions">BaseAddr.Status=;BaseAddr.Alarm=;BaseAddr.Analog=;BaseAddr.Totalisers=;Command.AUTO=;</string>
+  </param>
+  <input name="equipment" file="equip.dbf" desc="Equipment Database">
+    <field name="NAME" />
+    <field name="CLUSTER" />
+    <field name="TYPE" />
+    <field name="AREA" />
+    <field name="LOCATION" />
+    <field name="COMMENT" />
+    <field name="IODEVICE" />
+    <field name="TAGPREFIX" />
+    <field name="PARAM" />
+    <array name="param_list">{ToProperty('{param}','=',';')}</array>
+    <array name="BaseAddr">{ToProperty('{equipment.param_list[BaseAddr]}',':',',')}</array>
+  </input>
+  <output name="Var.PV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 0</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}PV</field>
+    <field name="type">REAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">2</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine (mg/l)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">2</field>
+    <field name="eng_units">mg/l</field>
+    <field name="format">#.##EU</field>
+    <field name="item">Pv</field>
+    <field name="taggenlink" load="true">Chlorinator.PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.PV" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}PV_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}PV</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC Chlorine (mg/l) trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Pv</field>
+    <field name="taggenlink" load="true">Chlorinator.PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.WGHT1_PV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 2</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}WGHT1_PV</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">1000</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine Load Cell Weight 1 (kg)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">1000</field>
+    <field name="eng_units">kg</field>
+    <field name="format">####EU</field>
+    <field name="item">Wght1_pv</field>
+    <field name="taggenlink" load="true">Chlorinator.WGHT1_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.WGHT1_PV" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}WGHT1_PV_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}WGHT1_PV</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC Chlorine Load Cell Weight 1 (kg) trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Wght1_pv</field>
+    <field name="taggenlink" load="true">Chlorinator.WGHT1_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.WGHT2_PV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 3</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}WGHT2_PV</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">1000</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine Load Cell Weight 2 (kg)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">1000</field>
+    <field name="eng_units">kg</field>
+    <field name="format">####EU</field>
+    <field name="item">Wght2_pv</field>
+    <field name="taggenlink" load="true">Chlorinator.WGHT2_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.WGHT2_PV" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}WGHT2_PV_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}WGHT2_PV</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC Chlorine Load Cell Weight 2 (kg) trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Wght2_pv</field>
+    <field name="taggenlink" load="true">Chlorinator.WGHT2_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.BPV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 0</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}BPV</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine Transmitter Bad Process Variable</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Bpv</field>
+    <field name="taggenlink" load="true">Chlorinator.BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.BPV" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}BPV_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC Chlorine Transmitter Bad Process Variable</field>
+    <field name="VAR_A">A_{equipment.tagprefix}BPV</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Bpv</field>
+    <field name="taggenlink" load="true">Chlorinator.BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.WGHT1_BPV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 1</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}WGHT1_BPV</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine Load Cell Weight 1 Bad Process Variable</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Wght1_bpv</field>
+    <field name="taggenlink" load="true">Chlorinator.WGHT1_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.WGHT1_BPV" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}WGHT1_BPV_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC Chlorine Load Cell Weight 1 Bad Process Variable</field>
+    <field name="VAR_A">A_{equipment.tagprefix}WGHT1_BPV</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Wght1_bpv</field>
+    <field name="taggenlink" load="true">Chlorinator.WGHT1_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.WGHT2_BPV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 2</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}WGHT2_BPV</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine Load Cell Weight 2 Bad Process Variable</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Wght2_bpv</field>
+    <field name="taggenlink" load="true">Chlorinator.WGHT2_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.WGHT2_BPV" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}WGHT2_BPV_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC Chlorine Load Cell Weight 2 Bad Process Variable</field>
+    <field name="VAR_A">A_{equipment.tagprefix}WGHT2_BPV</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Wght2_bpv</field>
+    <field name="taggenlink" load="true">Chlorinator.WGHT2_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.FLT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 5</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}FLT</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine General </field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Flt</field>
+    <field name="taggenlink" load="true">Chlorinator.FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.FLT" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}FLT_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC Chlorine General </field>
+    <field name="VAR_A">A_{equipment.tagprefix}FLT</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Flt</field>
+    <field name="taggenlink" load="true">Chlorinator.FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LEAK_HI" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 6</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}LEAK_HI</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine Leak High </field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Leak_hi</field>
+    <field name="taggenlink" load="true">Chlorinator.LEAK_HI</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.LEAK_HI" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}LEAK_HI_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC Chlorine Leak High </field>
+    <field name="VAR_A">A_{equipment.tagprefix}LEAK_HI</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Leak_hi</field>
+    <field name="taggenlink" load="true">Chlorinator.LEAK_HI</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LEAK_LO" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 7</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}LEAK_LO</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine Leak Low </field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Leak_lo</field>
+    <field name="taggenlink" load="true">Chlorinator.LEAK_LO</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.LEAK_LO" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}LEAK_LO_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC Chlorine Leak Low </field>
+    <field name="VAR_A">A_{equipment.tagprefix}LEAK_LO</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Leak_lo</field>
+    <field name="taggenlink" load="true">Chlorinator.LEAK_LO</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.SYS_POWER" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 8</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}SYS_POWER</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} SFC Chlorine Power Fail </field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Sys_power</field>
+    <field name="taggenlink" load="true">Chlorinator.SYS_POWER</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.SYS_POWER" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}SYS_POWER_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC Chlorine Power Fail </field>
+    <field name="VAR_A">A_{equipment.tagprefix}SYS_POWER</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Sys_power</field>
+    <field name="taggenlink" load="true">Chlorinator.SYS_POWER</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+</template>
