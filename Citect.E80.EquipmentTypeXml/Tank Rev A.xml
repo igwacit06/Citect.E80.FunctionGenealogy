@@ -1,0 +1,798 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<template desc="Tank Rev A">
+  <param name="type">
+    <string name="name">Tank Rev A</string>
+    <string name="ref" />
+    <string name="parameter-definitions">BaseAddr.Status=;BaseAddr.Alarm=;BaseAddr.Analog=;Command.AUTO=;</string>
+  </param>
+  <input name="equipment" file="equip.dbf" desc="Equipment Database">
+    <field name="NAME" />
+    <field name="CLUSTER" />
+    <field name="TYPE" />
+    <field name="AREA" />
+    <field name="LOCATION" />
+    <field name="COMMENT" />
+    <field name="IODEVICE" />
+    <field name="TAGPREFIX" />
+    <field name="PARAM" />
+    <array name="param_list">{ToProperty('{param}','=',';')}</array>
+    <array name="BaseAddr">{ToProperty('{equipment.param_list[BaseAddr]}',':',',')}</array>
+  </input>
+  <output name="Var.LVL_HIGH" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 0</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}_LVL_HIGH</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL HIGH ALARM</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Lvl_high</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HIGH</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.LVL_HIGH" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}_LVL_HIGH_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC TANK LEVEL HIGH ALARM</field>
+    <field name="VAR_A">A_{equipment.tagprefix}_LVL_HIGH</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category" />
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_high</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HIGH</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_HIGHCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_HIGHCmd</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL HIGH ALARM</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">4711(C_{equipment.tagprefix}_LVL_HIGH)</field>
+    <field name="item">LVL_HIGHCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HIGHCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_LOLO" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 1</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}_LVL_LOLO</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL LOW ALARM</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Lvl_lolo</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_LOLO</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.LVL_LOLO" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}_LVL_LOLO_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC TANK LEVEL LOW ALARM</field>
+    <field name="VAR_A">A_{equipment.tagprefix}_LVL_LOLO</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category" />
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_lolo</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_LOLO</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_LOLOCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_LOLOCmd</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL LOW ALARM</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">4712(C_{equipment.tagprefix}_LVL_LOLO)</field>
+    <field name="item">LVL_LOLOCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_LOLOCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_HI_SP" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 52</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_HI_SP</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} SFB TANK LEVEL FULL SETPOINT</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">%</field>
+    <field name="format">###EU</field>
+    <field name="item">Lvl_hi_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HI_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_HI_SP" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_HI_SP_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_HI_SP</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFB TANK LEVEL FULL SETPOINT trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_hi_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HI_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_HI_SPCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_HI_SPCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFB TANK LEVEL FULL SETPOINT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407087(C_{equipment.tagprefix}_LVL_HI_SP)</field>
+    <field name="item">LVL_HI_SPCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HI_SPCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_LO_SP" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 53</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_LO_SP</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} SFB TANK LEVEL FULL SETPOINT</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">%</field>
+    <field name="format">###EU</field>
+    <field name="item">Lvl_lo_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_LO_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_LO_SP" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_LO_SP_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_LO_SP</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFB TANK LEVEL FULL SETPOINT trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_lo_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_LO_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_LO_SPCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_LO_SPCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFB TANK LEVEL FULL SETPOINT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407088(C_{equipment.tagprefix}_LVL_LO_SP)</field>
+    <field name="item">LVL_LO_SPCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_LO_SPCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 0</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL SCALED VALUE 0-100%</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">%</field>
+    <field name="format">###EU</field>
+    <field name="item">Lvl</field>
+    <field name="taggenlink" load="true">TankRevA._LVL</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC TANK LEVEL SCALED VALUE 0-100% trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl</field>
+    <field name="taggenlink" load="true">TankRevA._LVL</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVLCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVLCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL SCALED VALUE 0-100%</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407035(C_{equipment.tagprefix}_LVL)</field>
+    <field name="item">LVLCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVLCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_40" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 6</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}_LVL_40</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK AT 40% ALARM</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Lvl_40</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_40</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.LVL_40" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}_LVL_40_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC TANK AT 40% ALARM</field>
+    <field name="VAR_A">A_{equipment.tagprefix}_LVL_40</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category" />
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_40</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_40</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_40Cmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_40Cmd</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK AT 40% ALARM</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">4717(C_{equipment.tagprefix}_LVL_40)</field>
+    <field name="item">LVL_40Cmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_40Cmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_SW_DISCRP" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 5</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}_LVL_SW_DISCRP</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC LVL SW DISCREP ALARM</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Lvl_sw_discrp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SW_DISCRP</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.LVL_SW_DISCRP" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}_LVL_SW_DISCRP_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">SFC LVL SW DISCREP ALARM</field>
+    <field name="VAR_A">A_{equipment.tagprefix}_LVL_SW_DISCRP</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category" />
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_sw_discrp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SW_DISCRP</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_SW_DISCRPCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_SW_DISCRPCmd</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC LVL SW DISCREP ALARM</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">4716(C_{equipment.tagprefix}_LVL_SW_DISCRP)</field>
+    <field name="item">LVL_SW_DISCRPCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SW_DISCRPCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_HI" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 1</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}_LVL_HI</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL HIGH STATUS</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Lvl_hi</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HI</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_HICmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_HICmd</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL HIGH STATUS</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">2804(C_{equipment.tagprefix}_LVL_HI)</field>
+    <field name="item">LVL_HICmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HICmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_HIHI" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 0</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}_LVL_HIHI</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL HIHI STATUS</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Lvl_hihi</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HIHI</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_HIHICmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_HIHICmd</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL HIHI STATUS</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">2803(C_{equipment.tagprefix}_LVL_HIHI)</field>
+    <field name="item">LVL_HIHICmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_HIHICmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_LO" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 2</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}_LVL_LO</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL LOW STATUS</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Lvl_lo</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_LO</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_LOCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_LOCmd</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL LOW STATUS</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">2805(C_{equipment.tagprefix}_LVL_LO)</field>
+    <field name="item">LVL_LOCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_LOCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_SP1" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 37</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_SP1</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">98</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK PRIORITY LEVEL SETPOINT1</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">98</field>
+    <field name="eng_units">%</field>
+    <field name="format">##EU</field>
+    <field name="item">Lvl_sp1</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP1</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_SP1" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_SP1_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_SP1</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC TANK PRIORITY LEVEL SETPOINT1 trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_sp1</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP1</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_SP1Cmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_SP1Cmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK PRIORITY LEVEL SETPOINT1</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407072(C_{equipment.tagprefix}_LVL_SP1)</field>
+    <field name="item">LVL_SP1Cmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP1Cmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_SP2" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 38</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_SP2</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">98</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK PRIORITY LEVEL SETPOINT2</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">98</field>
+    <field name="eng_units">%</field>
+    <field name="format">##EU</field>
+    <field name="item">Lvl_sp2</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP2</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_SP2" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_SP2_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_SP2</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC TANK PRIORITY LEVEL SETPOINT2 trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_sp2</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP2</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_SP2Cmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_SP2Cmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK PRIORITY LEVEL SETPOINT2</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407073(C_{equipment.tagprefix}_LVL_SP2)</field>
+    <field name="item">LVL_SP2Cmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP2Cmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_SP3" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 39</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_SP3</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">98</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK PRIORITY LEVEL SETPOINT3</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">98</field>
+    <field name="eng_units">%</field>
+    <field name="format">##EU</field>
+    <field name="item">Lvl_sp3</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP3</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_SP3" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_SP3_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_SP3</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC TANK PRIORITY LEVEL SETPOINT3 trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_sp3</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP3</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_SP3Cmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_SP3Cmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK PRIORITY LEVEL SETPOINT3</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407074(C_{equipment.tagprefix}_LVL_SP3)</field>
+    <field name="item">LVL_SP3Cmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP3Cmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_SP4" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 40</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_SP4</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">98</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK PRIORITY LEVEL SETPOINT4</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">98</field>
+    <field name="eng_units">%</field>
+    <field name="format">##EU</field>
+    <field name="item">Lvl_sp4</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP4</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_SP4" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_SP4_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_SP4</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC TANK PRIORITY LEVEL SETPOINT4 trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_sp4</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP4</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_SP4Cmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_SP4Cmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK PRIORITY LEVEL SETPOINT4</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407075(C_{equipment.tagprefix}_LVL_SP4)</field>
+    <field name="item">LVL_SP4Cmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_SP4Cmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_START_SP" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 51</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_START_SP</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL START PUMPS SETPOINT</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">%</field>
+    <field name="format">###EU</field>
+    <field name="item">Lvl_start_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_START_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_START_SP" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_START_SP_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_START_SP</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC TANK LEVEL START PUMPS SETPOINT trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_start_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_START_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_START_SPCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_START_SPCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL START PUMPS SETPOINT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407086(C_{equipment.tagprefix}_LVL_START_SP)</field>
+    <field name="item">LVL_START_SPCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_START_SPCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_STOP_SP" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 50</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_STOP_SP</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL STOP PUMPS SETPOINT</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">%</field>
+    <field name="format">###EU</field>
+    <field name="item">Lvl_stop_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_STOP_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_STOP_SP" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_STOP_SP_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_STOP_SP</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFC TANK LEVEL STOP PUMPS SETPOINT trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_stop_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_STOP_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_STOP_SPCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_STOP_SPCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFC TANK LEVEL STOP PUMPS SETPOINT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407085(C_{equipment.tagprefix}_LVL_STOP_SP)</field>
+    <field name="item">LVL_STOP_SPCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_STOP_SPCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_STP_SP" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 916</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_STP_SP</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">99</field>
+    <field name="comment">{equipment.tagprefix} SFB TANK LEVEL STOP SFC PUMPS SP</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">99</field>
+    <field name="eng_units">%</field>
+    <field name="format">##EU</field>
+    <field name="item">Lvl_stp_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_STP_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_STP_SP" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_STP_SP_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_STP_SP</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFB TANK LEVEL STOP SFC PUMPS SP trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_stp_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_STP_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_STP_SPCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_STP_SPCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFB TANK LEVEL STOP SFC PUMPS SP</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407951(C_{equipment.tagprefix}_LVL_STP_SP)</field>
+    <field name="item">LVL_STP_SPCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_STP_SPCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LVL_STT_SP" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 915</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_STT_SP</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">98</field>
+    <field name="comment">{equipment.tagprefix} SFB TANK LEVEL START SFC PUMPS SP</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">98</field>
+    <field name="eng_units">%</field>
+    <field name="format">##EU</field>
+    <field name="item">Lvl_stt_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_STT_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LVL_STT_SP" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}_LVL_STT_SP_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}_LVL_STT_SP</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">SFB TANK LEVEL START SFC PUMPS SP trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lvl_stt_sp</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_STT_SP</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LVL_STT_SPCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}_LVL_STT_SPCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">HEWS</field>
+    <field name="comment">{equipment.tagprefix} SFB TANK LEVEL START SFC PUMPS SP</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">407950(C_{equipment.tagprefix}_LVL_STT_SP)</field>
+    <field name="item">LVL_STT_SPCmd</field>
+    <field name="taggenlink" load="true">TankRevA._LVL_STT_SPCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+</template>

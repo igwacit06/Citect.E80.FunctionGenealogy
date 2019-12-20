@@ -1,0 +1,2114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<template desc="Bore Pump MMII">
+  <param name="type">
+    <string name="name">Bore Pump MMII</string>
+    <string name="ref" />
+    <string name="parameter-definitions">BaseAddr.Status=;BaseAddr.Alarm=;BaseAddr.Analog=;BaseAddr.Totalisers=;Command.AUTO=;</string>
+  </param>
+  <input name="equipment" file="equip.dbf" desc="Equipment Database">
+    <field name="NAME" />
+    <field name="CLUSTER" />
+    <field name="TYPE" />
+    <field name="AREA" />
+    <field name="LOCATION" />
+    <field name="COMMENT" />
+    <field name="IODEVICE" />
+    <field name="TAGPREFIX" />
+    <field name="PARAM" />
+    <array name="param_list">{ToProperty('{param}','=',';')}</array>
+    <array name="BaseAddr">{ToProperty('{equipment.param_list[BaseAddr]}',':',',')}</array>
+  </input>
+  <output name="Var.CLDWN" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 0</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}CLDWN</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Cooling Down</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Cldwn</field>
+    <field name="taggenlink" load="true">BorePumpMMII.CLDWN</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.AUTO" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 1</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}AUTO</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Auto</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Auto</field>
+    <field name="taggenlink" load="true">BorePumpMMII.AUTO</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.MAN" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 2</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}MAN</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Manual</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Man</field>
+    <field name="taggenlink" load="true">BorePumpMMII.MAN</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LOCAL" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 3</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}LOCAL</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Local</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Local</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LOCAL</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.OTM" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 4</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}OTM</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Out to Maintenance</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Otm</field>
+    <field name="taggenlink" load="true">BorePumpMMII.OTM</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.OFF" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 5</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}OFF</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Off</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Off</field>
+    <field name="taggenlink" load="true">BorePumpMMII.OFF</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.RDY" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 6</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}RDY</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Ready</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Rdy</field>
+    <field name="taggenlink" load="true">BorePumpMMII.RDY</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.RUNNG" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 7</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}RUNNG</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Running</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Runng</field>
+    <field name="taggenlink" load="true">BorePumpMMII.RUNNG</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.BIT1" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 8</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}BIT1</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Status Bit 1</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Bit1</field>
+    <field name="taggenlink" load="true">BorePumpMMII.BIT1</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.BIT2" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 9</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}BIT2</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Status Bit 2</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Bit2</field>
+    <field name="taggenlink" load="true">BorePumpMMII.BIT2</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.BIT3" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 10</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}BIT3</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Status Bit 3</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Bit3</field>
+    <field name="taggenlink" load="true">BorePumpMMII.BIT3</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.BIT4" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 11</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}BIT4</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Status Bit 4</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Bit4</field>
+    <field name="taggenlink" load="true">BorePumpMMII.BIT4</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.MOTOR_HLTY" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 12</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}MOTOR_HLTY</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Motor Healthy</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Motor_hlty</field>
+    <field name="taggenlink" load="true">BorePumpMMII.MOTOR_HLTY</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LOS_HLTY" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 13</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}LOS_HLTY</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Emergency Stop Healthy</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Los_hlty</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LOS_HLTY</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.REMRDY" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 14</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}REMRDY</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Remote Ready</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Remrdy</field>
+    <field name="taggenlink" load="true">BorePumpMMII.REMRDY</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.POWER_ON" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 15</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}POWER_ON</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Mains Power On</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Power_on</field>
+    <field name="taggenlink" load="true">BorePumpMMII.POWER_ON</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.COMMSINHIBIT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Status]} + 16</calculator>
+    <field name="name" key="true">S_{equipment.tagprefix}COMMSINHIBIT</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Communication Inhibited</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Commsinhibit</field>
+    <field name="taggenlink" load="true">BorePumpMMII.COMMSINHIBIT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FT01_LO" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 0</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}FT01_LO</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Low Flow </field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Ft01_lo</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_LO</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.FT01_LO" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}FT01_LO_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Low Flow </field>
+    <field name="VAR_A">A_{equipment.tagprefix}FT01_LO</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ft01_lo</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_LO</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.CA1_FTO" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 1</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}CA1_FTO</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Contactor Failed to Open</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Ca1_fto</field>
+    <field name="taggenlink" load="true">BorePumpMMII.CA1_FTO</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.CA1_FTO" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}CA1_FTO_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Contactor Failed to Open</field>
+    <field name="VAR_A">A_{equipment.tagprefix}CA1_FTO</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ca1_fto</field>
+    <field name="taggenlink" load="true">BorePumpMMII.CA1_FTO</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.CA1_FTC" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 2</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}CA1_FTC</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Contactor Failed to Close</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Ca1_ftc</field>
+    <field name="taggenlink" load="true">BorePumpMMII.CA1_FTC</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.CA1_FTC" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}CA1_FTC_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Contactor Failed to Close</field>
+    <field name="VAR_A">A_{equipment.tagprefix}CA1_FTC</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ca1_ftc</field>
+    <field name="taggenlink" load="true">BorePumpMMII.CA1_FTC</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.MOTOR_FLT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 3</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}MOTOR_FLT</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Motor Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Motor_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.MOTOR_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.MOTOR_FLT" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}MOTOR_FLT_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Motor Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}MOTOR_FLT</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Motor_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.MOTOR_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LOS_FLT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 4</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}LOS_FLT</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Emergency Stop Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Los_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LOS_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.LOS_FLT" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}LOS_FLT_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Emergency Stop Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}LOS_FLT</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Los_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LOS_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.POWER_FAIL" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 5</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}POWER_FAIL</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Mains Power Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Power_fail</field>
+    <field name="taggenlink" load="true">BorePumpMMII.POWER_FAIL</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.POWER_FAIL" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}POWER_FAIL_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Mains Power Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}POWER_FAIL</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Power_fail</field>
+    <field name="taggenlink" load="true">BorePumpMMII.POWER_FAIL</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.R0S1_FLT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 6</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}R0S1_FLT</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} PLC Rack 0 Slot 1 Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">R0s1_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.R0S1_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.R0S1_FLT" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}R0S1_FLT_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">PLC Rack 0 Slot 1 Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}R0S1_FLT</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">R0s1_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.R0S1_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.R0S2_FLT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 7</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}R0S2_FLT</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} PLC Rack 0 Slot 2 Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">R0s2_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.R0S2_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.R0S2_FLT" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}R0S2_FLT_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">PLC Rack 0 Slot 2 Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}R0S2_FLT</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">R0s2_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.R0S2_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.FT01_BPV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 8</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}FT01_BPV</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Flow Transmitter Error</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Ft01_bpv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.FT01_BPV" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}FT01_BPV_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Flow Transmitter Error</field>
+    <field name="VAR_A">A_{equipment.tagprefix}FT01_BPV</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ft01_bpv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.IT01_BPV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 9</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}IT01_BPV</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Current Transmitter Error</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">It01_bpv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IT01_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.IT01_BPV" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}IT01_BPV_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Current Transmitter Error</field>
+    <field name="VAR_A">A_{equipment.tagprefix}IT01_BPV</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">It01_bpv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IT01_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LT01_BPV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 10</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}LT01_BPV</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Level Transmitter Error</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Lt01_bpv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LT01_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.LT01_BPV" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}LT01_BPV_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Level Transmitter Error</field>
+    <field name="VAR_A">A_{equipment.tagprefix}LT01_BPV</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lt01_bpv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LT01_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.PT01_BPV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 11</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}PT01_BPV</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Pressure Transmitter Error</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Pt01_bpv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PT01_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.PT01_BPV" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}PT01_BPV_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Pressure Transmitter Error</field>
+    <field name="VAR_A">A_{equipment.tagprefix}PT01_BPV</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Pt01_bpv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PT01_BPV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.ETH_RST" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 12</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}ETH_RST</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} PLC Ethernet Port Successfully Reset</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Eth_rst</field>
+    <field name="taggenlink" load="true">BorePumpMMII.ETH_RST</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.ETH_RST" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}ETH_RST_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">PLC Ethernet Port Successfully Reset</field>
+    <field name="VAR_A">A_{equipment.tagprefix}ETH_RST</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Eth_rst</field>
+    <field name="taggenlink" load="true">BorePumpMMII.ETH_RST</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.PROJ" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 13</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}PROJ</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} PLC Project has Changed</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Proj</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PROJ</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.PROJ" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}PROJ_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">PLC Project has Changed</field>
+    <field name="VAR_A">A_{equipment.tagprefix}PROJ</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Proj</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PROJ</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.FORCES" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 14</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}FORCES</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} PLC Number of Forces has Changed</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Forces</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FORCES</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.FORCES" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}FORCES_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">PLC Number of Forces has Changed</field>
+    <field name="VAR_A">A_{equipment.tagprefix}FORCES</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Forces</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FORCES</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.COMMS" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 15</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}COMMS</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Comms HB Timeout </field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Comms</field>
+    <field name="taggenlink" load="true">BorePumpMMII.COMMS</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.COMMS" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}COMMS_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Comms HB Timeout </field>
+    <field name="VAR_A">A_{equipment.tagprefix}COMMS</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_COMMS_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Comms</field>
+    <field name="taggenlink" load="true">BorePumpMMII.COMMS</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.P110_Fail" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 16</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}P110_Fail</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} 110V Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">P110_fail</field>
+    <field name="taggenlink" load="true">BorePumpMMII.P110_Fail</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.P110_Fail" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}P110_Fail_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">110V Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}P110_Fail</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">P110_fail</field>
+    <field name="taggenlink" load="true">BorePumpMMII.P110_Fail</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.DECON_FLT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 17</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}DECON_FLT</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Decontactor Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Decon_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.DECON_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.DECON_FLT" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}DECON_FLT_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Decontactor Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}DECON_FLT</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Decon_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.DECON_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LA_FLT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 18</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}LA_FLT</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Lighting Arrestor Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">La_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LA_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.LA_FLT" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}LA_FLT_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Lighting Arrestor Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}LA_FLT</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">La_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LA_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.SS_FLT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 19</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}SS_FLT</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Soft Starter Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Ss_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.SS_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.SS_FLT" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}SS_FLT_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Soft Starter Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}SS_FLT</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ss_flt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.SS_FLT</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.CA1_CLSD" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 20</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}CA1_CLSD</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Main Contactor Not Closed</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Ca1_clsd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.CA1_CLSD</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.CA1_CLSD" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}CA1_CLSD_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Main Contactor Not Closed</field>
+    <field name="VAR_A">A_{equipment.tagprefix}CA1_CLSD</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ca1_clsd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.CA1_CLSD</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.CA2_CLSD" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 21</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}CA2_CLSD</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} Bypass Contactor Not Closed</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Ca2_clsd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.CA2_CLSD</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.CA2_CLSD" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}CA2_CLSD_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">Bypass Contactor Not Closed</field>
+    <field name="VAR_A">A_{equipment.tagprefix}CA2_CLSD</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_CRIT_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ca2_clsd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.CA2_CLSD</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.MMII_COMMS" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Alarm]} + 22</calculator>
+    <field name="name" key="true">A_{equipment.tagprefix}MMII_COMMS</field>
+    <field name="type">DIGITAL</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="comment">{equipment.tagprefix} MMII Comms Fault</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%M{TagAddress}</field>
+    <field name="item">Mmii_comms</field>
+    <field name="taggenlink" load="true">BorePumpMMII.MMII_COMMS</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Alm.MMII_COMMS" file="digalm.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="tag" key="true">A_{equipment.tagprefix}MMII_COMMS_Alm</field>
+    <field name="name">{equipment.name}</field>
+    <field name="desc">MMII Comms Fault</field>
+    <field name="VAR_A">A_{equipment.tagprefix}MMII_COMMS</field>
+    <field name="comment" />
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="category">TP_COMMS_CAT</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Mmii_comms</field>
+    <field name="taggenlink" load="true">BorePumpMMII.MMII_COMMS</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.FT01_PV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 0</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_PV</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">150</field>
+    <field name="comment">{equipment.tagprefix} Discharge Flow</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">150</field>
+    <field name="eng_units">m³/Hr</field>
+    <field name="format">###EU</field>
+    <field name="item">Ft01_pv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.FT01_PV" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_PV_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}FT01_PV</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Discharge Flow trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ft01_pv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.IT01_PV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 1</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}IT01_PV</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} Motor Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">A</field>
+    <field name="format">###EU</field>
+    <field name="item">It01_pv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IT01_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.IT01_PV" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}IT01_PV_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}IT01_PV</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Motor Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">It01_pv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IT01_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LT01_PV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 2</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}LT01_PV</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} Bore Level</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">%</field>
+    <field name="format">###EU</field>
+    <field name="item">Lt01_pv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LT01_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LT01_PV" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}LT01_PV_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}LT01_PV</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Bore Level trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Lt01_pv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LT01_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.PT01_PV" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 3</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}PT01_PV</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} Discharge Pressure</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">kPa</field>
+    <field name="format">###EU</field>
+    <field name="item">Pt01_pv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PT01_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.PT01_PV" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}PT01_PV_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}PT01_PV</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Discharge Pressure trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Pt01_pv</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PT01_PV</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.FT01_YLDCD" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 5</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_YLDCD</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">10000</field>
+    <field name="comment">{equipment.tagprefix} Flow Yield Current Day</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">10000</field>
+    <field name="eng_units">m³</field>
+    <field name="format">#####EU</field>
+    <field name="item">Ft01_yldcd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_YLDCD</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FT01_YLDPD" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 6</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_YLDPD</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">10000</field>
+    <field name="comment">{equipment.tagprefix} Flow Yield Previous Day</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">10000</field>
+    <field name="eng_units">m³</field>
+    <field name="format">#####EU</field>
+    <field name="item">Ft01_yldpd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_YLDPD</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.HRSCD" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 7</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}HRSCD</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">24</field>
+    <field name="comment">{equipment.tagprefix} Run Hours Current Day</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">2400</field>
+    <field name="eng_units">Hrs</field>
+    <field name="format">#.##EU</field>
+    <field name="item">Hrscd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.HRSCD</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.HRSPD" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 8</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}HRSPD</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">24</field>
+    <field name="comment">{equipment.tagprefix} Run Hours Previous Day</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">2400</field>
+    <field name="eng_units">Hrs</field>
+    <field name="format">#.##EU</field>
+    <field name="item">Hrspd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.HRSPD</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FT01_YLD" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 11</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_YLD</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">1000000000</field>
+    <field name="comment">{equipment.tagprefix} Flow Total Accumulated Yield</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">1000000000</field>
+    <field name="eng_units">m³</field>
+    <field name="format">#########EU</field>
+    <field name="item">Ft01_yld</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_YLD</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.HRS" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 13</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}HRS</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">2400000</field>
+    <field name="comment">{equipment.tagprefix} Total Accumulated Run Hours</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">240000000</field>
+    <field name="eng_units">Hrs</field>
+    <field name="format">########EU</field>
+    <field name="item">Hrs</field>
+    <field name="taggenlink" load="true">BorePumpMMII.HRS</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.ALM1" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 15</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}ALM1</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">0</field>
+    <field name="comment">{equipment.tagprefix} Alarm Word 1</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">0</field>
+    <field name="eng_units" />
+    <field name="format" />
+    <field name="item">Alm1</field>
+    <field name="taggenlink" load="true">BorePumpMMII.ALM1</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.ALM2" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 16</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}ALM2</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">0</field>
+    <field name="comment">{equipment.tagprefix} Alarm Word 2</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">0</field>
+    <field name="eng_units" />
+    <field name="format" />
+    <field name="item">Alm2</field>
+    <field name="taggenlink" load="true">BorePumpMMII.ALM2</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.IA" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 17</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}IA</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">500</field>
+    <field name="comment">{equipment.tagprefix} Phase A Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">500</field>
+    <field name="eng_units">A</field>
+    <field name="format">###EU</field>
+    <field name="item">Ia</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IA</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.IA" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}IA_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}IA</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Phase A Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ia</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IA</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.IB" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 18</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}IB</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">500</field>
+    <field name="comment">{equipment.tagprefix} Phase B Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">500</field>
+    <field name="eng_units">A</field>
+    <field name="format">###EU</field>
+    <field name="item">Ib</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IB</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.IB" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}IB_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}IB</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Phase B Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ib</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IB</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.IC" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 19</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}IC</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">500</field>
+    <field name="comment">{equipment.tagprefix} Phase C Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">500</field>
+    <field name="eng_units">A</field>
+    <field name="format">###EU</field>
+    <field name="item">Ic</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IC</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.IC" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}IC_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}IC</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Phase C Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ic</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IC</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.IE" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 20</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}IE</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} Ground Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">mA</field>
+    <field name="format">###EU</field>
+    <field name="item">Ie</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IE</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.IE" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}IE_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}IE</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Ground Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ie</field>
+    <field name="taggenlink" load="true">BorePumpMMII.IE</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.TC" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 21</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}TC</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} Thermal Capacity</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">%</field>
+    <field name="format">###EU</field>
+    <field name="item">Tc</field>
+    <field name="taggenlink" load="true">BorePumpMMII.TC</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.TC" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}TC_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}TC</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Thermal Capacity trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Tc</field>
+    <field name="taggenlink" load="true">BorePumpMMII.TC</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.II" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 22</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}II</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} Current Phase Imbalance</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">%</field>
+    <field name="format">###EU</field>
+    <field name="item">Ii</field>
+    <field name="taggenlink" load="true">BorePumpMMII.II</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.II" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}II_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}II</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Current Phase Imbalance trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Ii</field>
+    <field name="taggenlink" load="true">BorePumpMMII.II</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.LOAD" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 23</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}LOAD</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} Full Load Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">%</field>
+    <field name="format">###EU</field>
+    <field name="item">Load</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LOAD</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.LOAD" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}LOAD_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}LOAD</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Full Load Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Load</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LOAD</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.PWR" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 24</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}PWR</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} Power</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">1000</field>
+    <field name="eng_units">kW</field>
+    <field name="format">##.#</field>
+    <field name="item">Pwr</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PWR</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.PWR" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}PWR_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}PWR</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Power trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Pwr</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PWR</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.Volts" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 25</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}Volts</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">500</field>
+    <field name="comment">{equipment.tagprefix} Voltage</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">500</field>
+    <field name="eng_units">V</field>
+    <field name="format">###EU</field>
+    <field name="item">Volts</field>
+    <field name="taggenlink" load="true">BorePumpMMII.Volts</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.Volts" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}Volts_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}Volts</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Voltage trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Volts</field>
+    <field name="taggenlink" load="true">BorePumpMMII.Volts</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.COT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 26</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}COT</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">0</field>
+    <field name="comment">{equipment.tagprefix} Cause of Trip</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">0</field>
+    <field name="eng_units" />
+    <field name="format" />
+    <field name="item">Cot</field>
+    <field name="taggenlink" load="true">BorePumpMMII.COT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.RST_TM" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 27</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}RST_TM</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">0</field>
+    <field name="comment">{equipment.tagprefix} Time to Rest</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">0</field>
+    <field name="eng_units" />
+    <field name="format" />
+    <field name="item">Rst_tm</field>
+    <field name="taggenlink" load="true">BorePumpMMII.RST_TM</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.PRETRIP_A" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 28</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}PRETRIP_A</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">500</field>
+    <field name="comment">{equipment.tagprefix} Phase A Pre-Trip Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">500</field>
+    <field name="eng_units">A</field>
+    <field name="format">###EU</field>
+    <field name="item">Pretrip_a</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PRETRIP_A</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.PRETRIP_A" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}PRETRIP_A_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}PRETRIP_A</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Phase A Pre-Trip Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Pretrip_a</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PRETRIP_A</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.PRETRIP_B" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 29</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}PRETRIP_B</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">500</field>
+    <field name="comment">{equipment.tagprefix} Phase B Pre-Trip Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">500</field>
+    <field name="eng_units">A</field>
+    <field name="format">###EU</field>
+    <field name="item">Pretrip_b</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PRETRIP_B</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.PRETRIP_B" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}PRETRIP_B_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}PRETRIP_B</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Phase B Pre-Trip Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Pretrip_b</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PRETRIP_B</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.PRETRIP_C" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 30</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}PRETRIP_C</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">500</field>
+    <field name="comment">{equipment.tagprefix} Phase C Pre-Trip Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">500</field>
+    <field name="eng_units">A</field>
+    <field name="format">###EU</field>
+    <field name="item">Pretrip_c</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PRETRIP_C</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.PRETRIP_C" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}PRETRIP_C_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}PRETRIP_C</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Phase C Pre-Trip Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Pretrip_c</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PRETRIP_C</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.PRETRIP_GND" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 31</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}PRETRIP_GND</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">100</field>
+    <field name="comment">{equipment.tagprefix} Ground Pre-Trip Current</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">100</field>
+    <field name="eng_units">mA</field>
+    <field name="format">###EU</field>
+    <field name="item">Pretrip_gnd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PRETRIP_GND</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="TRN.PRETRIP_GND" file="trend.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}PRETRIP_GND_Trn</field>
+    <field name="expr">N_{equipment.tagprefix}PRETRIP_GND</field>
+    <field name="sampleper" />
+    <field name="files" />
+    <field name="time" />
+    <field name="period" />
+    <field name="comment">Ground Pre-Trip Current trend</field>
+    <field name="type">TRN_PERIODIC</field>
+    <field name="stormethod">Floating Point (8-byte samples)</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="item">Pretrip_gnd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.PRETRIP_GND</field>
+    <field name="linked">1</field>
+    <field name="editcode">9</field>
+  </output>
+  <output name="Var.FORCES_CNT" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Analog]} + 37</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FORCES_CNT</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">32767</field>
+    <field name="comment">{equipment.tagprefix} Number of Forces in PLC</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">32767</field>
+    <field name="eng_units" />
+    <field name="format" />
+    <field name="item">Forces_cnt</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FORCES_CNT</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FT01_TOT_CurrDay" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 0</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_TOT_CurrDay</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">32767</field>
+    <field name="comment">{equipment.tagprefix} Current Day's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">32767</field>
+    <field name="eng_units">m³</field>
+    <field name="format">#####EU</field>
+    <field name="item">Ft01_tot_currday</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_TOT_CurrDay</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FT01_TOT_PrevDay" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 1</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_TOT_PrevDay</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">32767</field>
+    <field name="comment">{equipment.tagprefix} Previous Day's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">32767</field>
+    <field name="eng_units">m³</field>
+    <field name="format">#####EU</field>
+    <field name="item">Ft01_tot_prevday</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_TOT_PrevDay</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FT01_TOT_CurrMonth" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 2</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_TOT_CurrMonth</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">1000000000</field>
+    <field name="comment">{equipment.tagprefix} Current Month's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">1000000000</field>
+    <field name="eng_units">m³</field>
+    <field name="format">#########EU</field>
+    <field name="item">Ft01_tot_currmonth</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_TOT_CurrMonth</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FT01_TOT_PrevMonth" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 4</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_TOT_PrevMonth</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">1000000000</field>
+    <field name="comment">{equipment.tagprefix} Previous Month's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">1000000000</field>
+    <field name="eng_units">m³</field>
+    <field name="format">#########EU</field>
+    <field name="item">Ft01_tot_prevmonth</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_TOT_PrevMonth</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FT01_TOT_CurrYear" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 6</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_TOT_CurrYear</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">1000000000</field>
+    <field name="comment">{equipment.tagprefix} Current Year's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">1000000000</field>
+    <field name="eng_units">m³</field>
+    <field name="format">#########EU</field>
+    <field name="item">Ft01_tot_curryear</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_TOT_CurrYear</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FT01_TOT_PrevYear" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 8</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}FT01_TOT_PrevYear</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">1000000000</field>
+    <field name="comment">{equipment.tagprefix} Previous Month's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">1000000000</field>
+    <field name="eng_units">m³</field>
+    <field name="format">#########EU</field>
+    <field name="item">Ft01_tot_prevyear</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FT01_TOT_PrevYear</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.HRS_TOT_CurrDay" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 10</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}HRS_TOT_CurrDay</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">24</field>
+    <field name="comment">{equipment.tagprefix} Current Day's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">2400</field>
+    <field name="eng_units">Hrs</field>
+    <field name="format">#.##EU</field>
+    <field name="item">Hrs_tot_currday</field>
+    <field name="taggenlink" load="true">BorePumpMMII.HRS_TOT_CurrDay</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.HRS_TOT_PrevDay" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 11</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}HRS_TOT_PrevDay</field>
+    <field name="type">INT</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">24</field>
+    <field name="comment">{equipment.tagprefix} Previous Day's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">2400</field>
+    <field name="eng_units">Hrs</field>
+    <field name="format">#.##EU</field>
+    <field name="item">Hrs_tot_prevday</field>
+    <field name="taggenlink" load="true">BorePumpMMII.HRS_TOT_PrevDay</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.HRS_TOT_CurrMonth" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 12</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}HRS_TOT_CurrMonth</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">2400000</field>
+    <field name="comment">{equipment.tagprefix} Current Month's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">240000000</field>
+    <field name="eng_units">Hrs</field>
+    <field name="format">########EU</field>
+    <field name="item">Hrs_tot_currmonth</field>
+    <field name="taggenlink" load="true">BorePumpMMII.HRS_TOT_CurrMonth</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.HRS_TOT_PrevMonth" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 14</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}HRS_TOT_PrevMonth</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">2400000</field>
+    <field name="comment">{equipment.tagprefix} Previous Month's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">240000000</field>
+    <field name="eng_units">Hrs</field>
+    <field name="format">########EU</field>
+    <field name="item">Hrs_tot_prevmonth</field>
+    <field name="taggenlink" load="true">BorePumpMMII.HRS_TOT_PrevMonth</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.HRS_TOT_CurrYear" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 16</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}HRS_TOT_CurrYear</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">2400000</field>
+    <field name="comment">{equipment.tagprefix} Current Year's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">240000000</field>
+    <field name="eng_units">Hrs</field>
+    <field name="format">########EU</field>
+    <field name="item">Hrs_tot_curryear</field>
+    <field name="taggenlink" load="true">BorePumpMMII.HRS_TOT_CurrYear</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.HRS_TOT_PrevYear" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <calculator name="TagAddress">{equipment.BaseAddr[Totalisers]} + 18</calculator>
+    <field name="name" key="true">N_{equipment.tagprefix}HRS_TOT_PrevYear</field>
+    <field name="type">LONG</field>
+    <field name="unit">{equipment.IODEVICE}</field>
+    <field name="eng_zero">0</field>
+    <field name="eng_full">2400000</field>
+    <field name="comment">{equipment.tagprefix} Previous Month's Value</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">%MW{TagAddress}</field>
+    <field name="raw_zero">0</field>
+    <field name="raw_full">240000000</field>
+    <field name="eng_units">Hrs</field>
+    <field name="format">########EU</field>
+    <field name="item">Hrs_tot_prevyear</field>
+    <field name="taggenlink" load="true">BorePumpMMII.HRS_TOT_PrevYear</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.ALMACKCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}ALMACKCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">CICODESVR</field>
+    <field name="comment">{equipment.tagprefix} Reset Command</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">LabelRetValue(C_{equipment.tagprefix}_ALMACK)</field>
+    <field name="item">ALMACKCmd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.ALMACKCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.AUTOCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}AUTOCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">CICODESVR</field>
+    <field name="comment">{equipment.tagprefix} Auto Command</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">LabelRetValue(C_{equipment.tagprefix}_AUTO)</field>
+    <field name="item">AUTOCmd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.AUTOCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.MANCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}MANCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">CICODESVR</field>
+    <field name="comment">{equipment.tagprefix} Manual Command</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">LabelRetValue(C_{equipment.tagprefix}_MAN)</field>
+    <field name="item">MANCmd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.MANCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.LOCALCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}LOCALCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">CICODESVR</field>
+    <field name="comment">{equipment.tagprefix} Local Command</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">LabelRetValue(C_{equipment.tagprefix}_LOCAL)</field>
+    <field name="item">LOCALCmd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.LOCALCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.OTMCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}OTMCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">CICODESVR</field>
+    <field name="comment">{equipment.tagprefix} Out to Maint Command</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">LabelRetValue(C_{equipment.tagprefix}_OTM)</field>
+    <field name="item">OTMCmd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.OTMCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.OFFCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}OFFCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">CICODESVR</field>
+    <field name="comment">{equipment.tagprefix} Off Command</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">LabelRetValue(C_{equipment.tagprefix}_OFF)</field>
+    <field name="item">OFFCmd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.OFFCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.STTCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}STTCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">CICODESVR</field>
+    <field name="comment">{equipment.tagprefix} Start Command</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">LabelRetValue(C_{equipment.tagprefix}_STT)</field>
+    <field name="item">STTCmd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.STTCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.STPCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}STPCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">CICODESVR</field>
+    <field name="comment">{equipment.tagprefix} Stop Command</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">LabelRetValue(C_{equipment.tagprefix}_STP)</field>
+    <field name="item">STPCmd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.STPCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.COMMSINHIBITCmd" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">{equipment.tagprefix}COMMSINHIBITCmd</field>
+    <field name="type">INT</field>
+    <field name="unit">CICODESVR</field>
+    <field name="comment">{equipment.tagprefix} Inhbit Comms Command</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="addr">LabelRetValue(C_{equipment.tagprefix}_COMMSINHIBIT)</field>
+    <field name="item">COMMSINHIBITCmd</field>
+    <field name="taggenlink" load="true">BorePumpMMII.COMMSINHIBITCmd</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+  <output name="Var.FEST" file="variable.dbf" filter="'{equipment.type}={type.name}'">
+    <field name="name" key="true">N_{equipment.tagprefix}FEST</field>
+    <field name="type">INT</field>
+    <field name="unit">memdevice</field>
+    <field name="comment">{equipment.tagprefix} Flow Estimate</field>
+    <field name="cluster" key="true">{equipment.cluster}</field>
+    <field name="equip">{equipment.name}</field>
+    <field name="eng_units">m³/Hr</field>
+    <field name="format">###EU</field>
+    <field name="item">Fest</field>
+    <field name="taggenlink" load="true">BorePumpMMII.FEST</field>
+    <field name="linked">1</field>
+    <field name="editcode">3939343</field>
+  </output>
+</template>
