@@ -5,18 +5,21 @@ using System.Linq;
 using log4net;
 using System.IO;
 
+
 namespace Citect.E80.FunctionGenealogy
 {
     public class CitectGraphics
     {
+
+        
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly GraphicsBuilder.IGraphicsBuilder GraphicsBuilder;
+        //private readonly GraphicsBuilder.IGraphicsBuilder GraphicsBuilder;
         private List<CitectPages> CitectPages;
         private readonly List<ProjectPages> ProjectPages;
 
         public CitectGraphics()
         {
-            GraphicsBuilder = new GraphicsBuilder.GraphicsBuilder();
+            //GraphicsBuilder = new GraphicsBuilder.GraphicsBuilder();
             ProjectPages = new List<ProjectPages>();
             CitectPages = new List<CitectPages>();
         }
@@ -27,7 +30,7 @@ namespace Citect.E80.FunctionGenealogy
         /// </summary>
         /// <param name="path"></param>
         public void GetProjectPages(string path, bool retrievePageANs = true)
-        {            
+        {                       
             using (var dbfTable = new DbfTable(path, System.Text.Encoding.UTF8))
             {
                 var skipDeleted = true;
@@ -125,52 +128,53 @@ namespace Citect.E80.FunctionGenealogy
         /// <param name="pageName"></param>
         public bool GetGenies(string projectName, string pageName)
         {
-            GraphicsBuilder.ProjectSelect(projectName);
-            GraphicsBuilder.PageOpen(projectName, pageName);
-            GraphicsBuilder.PageSelectFirstObject();
-            while (GraphicsBuilder.AttributeClass() != "")
-            {
-                try
-                {
-                    var attributes = GraphicsBuilder.AttributeClass();
-                    if (!attributes.Contains("Genie"))
-                    {
-                        GraphicsBuilder.PageSelectNextObject();
-                        continue;
-                    }
+            throw new NotImplementedException();
+            //GraphicsBuilder.ProjectSelect(projectName);
+            //GraphicsBuilder.PageOpen(projectName, pageName);
+            //GraphicsBuilder.PageSelectFirstObject();
+            //while (GraphicsBuilder.AttributeClass() != "")
+            //{
+            //    try
+            //    {
+            //        var attributes = GraphicsBuilder.AttributeClass();
+            //        if (!attributes.Contains("Genie"))
+            //        {
+            //            GraphicsBuilder.PageSelectNextObject();
+            //            continue;
+            //        }
 
-                    var error = false;
-                    GraphicsBuilder.LibraryObjectFirstProperty(out string propertyName, out string propertyVal);
-                    while (!error)
-                    {
-                        try
-                        {
-                            GraphicsBuilder.LibraryObjectNextProperty(out propertyName, out propertyVal);
-                            //GraphicsBuilder.CompositeGeniePlace(new Guid(""), new Array[8] { "5", "6", "7", "78", "8","0","0","0" }, 0, 0);
+            //        var error = false;
+            //        GraphicsBuilder.LibraryObjectFirstProperty(out string propertyName, out string propertyVal);
+            //        while (!error)
+            //        {
+            //            try
+            //            {
+            //                GraphicsBuilder.LibraryObjectNextProperty(out propertyName, out propertyVal);
+            //                //GraphicsBuilder.CompositeGeniePlace(new Guid(""), new Array[8] { "5", "6", "7", "78", "8","0","0","0" }, 0, 0);
                             
-                            log.DebugFormat("propertyName:{0}|propertyvalue:{1}", propertyName, propertyVal);
-                        }
-                        catch (Exception ex)
-                        {
-                            log.Error("Error", ex);
-                            error = true;
-                        }
-                    }
-                    //GraphicsBuilder.LibraryObjectFirstProperty(out string propertyName, out string propertyVal);
-                    //GraphicsBuilder.LibraryNextObject(out string value);
+            //                log.DebugFormat("propertyName:{0}|propertyvalue:{1}", propertyName, propertyVal);
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                log.Error("Error", ex);
+            //                error = true;
+            //            }
+            //        }
+            //        //GraphicsBuilder.LibraryObjectFirstProperty(out string propertyName, out string propertyVal);
+            //        //GraphicsBuilder.LibraryNextObject(out string value);
 
-                    //log.DebugFormat("GetGenies:{0}", attributes);
+            //        //log.DebugFormat("GetGenies:{0}", attributes);
 
-                    GraphicsBuilder.PageSelectNextObject();
-                }
-                catch (Exception ex)
-                {
-                    log.Error("GetGenies()", ex);
-                    break;
-                }
-            }
-            GraphicsBuilder.PageClose();
-            return true;
+            //        GraphicsBuilder.PageSelectNextObject();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        log.Error("GetGenies()", ex);
+            //        break;
+            //    }
+            //}
+            //GraphicsBuilder.PageClose();
+            //return true;
         }
     }
 

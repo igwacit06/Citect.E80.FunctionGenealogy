@@ -64,16 +64,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="GraphicsBuilder">
-      <Guid>{58792D66-0C1E-4E72-9F6F-BEEEC483B9EF}</Guid>
-      <VersionMajor>6</VersionMajor>
-      <VersionMinor>2</VersionMinor>
-      <Lcid>9</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
